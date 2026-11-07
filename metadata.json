@@ -1,0 +1,6 @@
+{
+  "name": "PPAP Management System",
+  "description": "Enterprise AI-Powered Production Part Approval Process (PPAP) Management System compliant with IATF 16949 and AIAG standards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
