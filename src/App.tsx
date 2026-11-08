@@ -14,7 +14,7 @@ import { History, ClipboardCheck, Layers } from 'lucide-react';
 
 function MainApp() {
   const { t } = useLanguage();
-  const [currentView, setCurrentView] = useState<'dashboard' | 'projects' | 'completeness' | 'audit'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'projects' | 'completeness' | 'audit' | 'upload'>('dashboard');
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [showNewProjectModal, setShowNewProjectModal] = useState(false);
   const [showAIGeneratorModal, setShowAIGeneratorModal] = useState(false);
@@ -23,6 +23,7 @@ function MainApp() {
   const [pendingCount, setPendingCount] = useState(0);
   const [activeProject, setActiveProject] = useState<PPAPProject | null>(null);
   const [allAuditLogs, setAllAuditLogs] = useState<any[]>([]);
+  const [uploadedProjectId, setUploadedProjectId] = useState<string | null>(null);
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
     try {
@@ -127,8 +128,7 @@ function MainApp() {
             <ProjectList
               onSelectProject={handleSelectProject}
               onOpenNewProject={() => setShowNewProjectModal(true)}
-            />
-          ) : currentView === 'completeness' ? (
+            />): currentView === 'completeness' ? (
             <div className="space-y-6">
               <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm">
                 <div className="flex items-center space-x-2">
@@ -145,6 +145,36 @@ function MainApp() {
               <ProjectList
                 onSelectProject={handleSelectProject}
                 onOpenNewProject={() => setShowNewProjectModal(true)}
+              />
+            </div>
+          ) : currentView === 'upload' ? (
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm">
+              <h1 className="text-xl font-bold text-white tracking-tight">Upload PPAP Project</h1>
+              <p className="text-slate-400 text-xs mt-1">Select a PPAP project file to import from outside.</p>
+              <input
+                type="file"
+                accept=".json,.zip"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e: any) => {
+                      const projectData = JSON.parse(e.target.result);
+                      const newProjectId = crypto.randomUUID();
+                      const projectWithId = { ...projectData, id: newProjectId };
+                      api.createProject(projectWithId)
+                        .then(() => {
+                          setUploadedProjectId(newProjectId);
+                          setSelectedProjectId(newProjectId);
+                          setCurrentView('projects');
+                          loadCounts();
+                        })
+                        .catch(err => alert('Failed to import project: ' + err.message));
+                    };
+                    reader.readAsText(file);
+                  }
+                }}
+                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-slate-100 hover:border-blue-500 focus:outline-none focus:border-blue-500 transition"
               />
             </div>
           ) : (
@@ -187,7 +217,7 @@ function MainApp() {
                 </div>
               </div>
             </div>
-          )}
+          )
         </main>
       </div>
 

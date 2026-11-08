@@ -7,12 +7,13 @@ import {
   History,
   FileCheck2,
   ShieldCheck,
-  Award
+  Award,
+  Upload
 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 
 interface SidebarProps {
-  currentView: 'dashboard' | 'projects' | 'completeness' | 'audit';
+  currentView: 'dashboard' | 'projects' | 'completeness' | 'audit' | 'upload';
   onNavigate: (view: 'dashboard' | 'projects' | 'completeness' | 'audit') => void;
   onOpenAIGenerator: () => void;
   projectsCount: number;
@@ -46,6 +47,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: FolderGit2,
       badge: projectsCount,
       onClick: () => onNavigate('projects')
+    },
+    {
+      id: 'upload',
+      label: t.uploadProject,
+      icon: Upload,
+      badge: null,
+      onClick: () => onNavigate('upload')
     },
     {
       id: 'ai-doc',
