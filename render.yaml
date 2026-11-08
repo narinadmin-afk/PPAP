@@ -2,9 +2,11 @@ services:
   - type: web
     name: ppap-ikhu
     env: node
-    buildCommand: npm run build
-    startCommand: npx serve -s dist
+    buildCommand: npm install && npm run build
+    startCommand: npx serve -s dist -l $PORT
     nodeVersion: 20
     envVars:
       - key: NODE_ENV
         value: production
+      - key: FROZEN_LOCKFILE
+        value: false
