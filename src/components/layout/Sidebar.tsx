@@ -9,11 +9,13 @@ import {
   ShieldCheck,
   Award,
   UploadCloud,
-  FolderOpen
+  FolderOpen,
+  Users
 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
+import { useAuth } from '../../context/AuthContext';
 
-export type SidebarView = 'dashboard' | 'projects' | 'completeness' | 'audit' | 'files';
+export type SidebarView = 'dashboard' | 'projects' | 'completeness' | 'audit' | 'files' | 'users';
 
 interface SidebarProps {
   currentView: SidebarView;
@@ -37,6 +39,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onToggleCollapse
 }) => {
   const { t } = useLanguage();
+  const { currentUser } = useAuth();
 
   const navItems = [
     {
@@ -83,7 +86,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
       icon: History,
       badge: null,
       onClick: () => onNavigate('audit')
-    }
+    },
+    ...(currentUser.role === 'Administrator'
+      ? [
+          {
+            id: 'users' as const,
+            label: 'จัดการสมาชิก & สิทธิ์',
+            icon: Users,
+            badge: 'Admin',
+            badgeColor: 'bg-purple-500/20 text-purple-300 border border-purple-500/30',
+            onClick: () => onNavigate('users')
+          }
+        ]
+      : [])
   ];
 
   return (

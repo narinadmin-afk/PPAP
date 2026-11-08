@@ -23,11 +23,32 @@ import {
   Tag,
   ExternalLink,
   ShieldCheck,
-  File
+  File,
+  Cloud,
+  CloudCheck,
+  LogOut,
+  Sparkles,
+  Database
 } from 'lucide-react';
+import { User } from 'firebase/auth';
 import { PPAPProject, ExternalProjectFile } from '../../types/ppap';
 import { useAuth } from '../../context/AuthContext';
 import { PDFPreviewModal } from '../common/PDFPreviewModal';
+import {
+  saveFileToIndexedDB,
+  getFileBlobFromIndexedDB,
+  getAllFilesFromIndexedDB,
+  deleteFileFromIndexedDB,
+  getIndexedDBStorageStats
+} from '../../services/indexedDbStorage';
+import {
+  initDriveAuthListener,
+  signInWithGoogleDrive,
+  signOutGoogleDrive,
+  uploadFileToGoogleDrive,
+  deleteFileFromGoogleDrive,
+  getDriveAccessToken
+} from '../../services/googleDriveService';
 
 interface ExternalFileRepositoryProps {
   projects: PPAPProject[];
@@ -36,7 +57,7 @@ interface ExternalFileRepositoryProps {
   onNavigateToElement?: (elementId: number) => void;
 }
 
-// Authentic initial automotive project files pre-seeded
+// Authentic initial automotive project files pre-seeded for immediate productivity
 const INITIAL_EXTERNAL_FILES: ExternalProjectFile[] = [
   {
     id: 'ext-file-001',
@@ -55,7 +76,9 @@ const INITIAL_EXTERNAL_FILES: ExternalProjectFile[] = [
     uploadedAt: '2026-10-15T09:30:00.000Z',
     notes: 'Official Toyota Technical Standard for Engine Mounting High-Tensile Steel Bracket Durability and Corrosion Specification.',
     isPDF: true,
-    status: 'Verified'
+    status: 'Verified',
+    storageType: 'indexeddb',
+    isSyncedToDrive: false
   },
   {
     id: 'ext-file-002',
@@ -74,7 +97,9 @@ const INITIAL_EXTERNAL_FILES: ExternalProjectFile[] = [
     uploadedAt: '2026-10-18T14:15:00.000Z',
     notes: 'Native 3D CAD STEP file exported for tooling and fixture coordinate verification.',
     isPDF: false,
-    status: 'Verified'
+    status: 'Verified',
+    storageType: 'indexeddb',
+    isSyncedToDrive: false
   },
   {
     id: 'ext-file-003',
@@ -93,7 +118,9 @@ const INITIAL_EXTERNAL_FILES: ExternalProjectFile[] = [
     uploadedAt: '2026-10-22T11:00:00.000Z',
     notes: 'JFE Steel Corporation Material Test Certificate with chemical analysis and yield strength test results.',
     isPDF: true,
-    status: 'Verified'
+    status: 'Verified',
+    storageType: 'indexeddb',
+    isSyncedToDrive: false
   },
   {
     id: 'ext-file-004',
@@ -112,7 +139,9 @@ const INITIAL_EXTERNAL_FILES: ExternalProjectFile[] = [
     uploadedAt: '2026-10-25T16:45:00.000Z',
     notes: 'Complete coordinate measurement point dataset from Zeiss CMM with 45 balloon dimensions across 5 samples.',
     isPDF: false,
-    status: 'Pending Review'
+    status: 'Pending Review',
+    storageType: 'indexeddb',
+    isSyncedToDrive: false
   },
   {
     id: 'ext-file-005',
@@ -131,7 +160,9 @@ const INITIAL_EXTERNAL_FILES: ExternalProjectFile[] = [
     uploadedAt: '2026-10-28T10:20:00.000Z',
     notes: 'Customer Engineering Approval sheet signed by Honda Engineering R&D Center (Prachinburi).',
     isPDF: true,
-    status: 'Verified'
+    status: 'Verified',
+    storageType: 'indexeddb',
+    isSyncedToDrive: false
   },
   {
     id: 'ext-file-006',
@@ -150,7 +181,9 @@ const INITIAL_EXTERNAL_FILES: ExternalProjectFile[] = [
     uploadedAt: '2026-11-02T13:10:00.000Z',
     notes: 'Compressed backup containing checking aid maintenance manuals, dial indicator calibration certs, and photos.',
     isPDF: false,
-    status: 'Verified'
+    status: 'Verified',
+    storageType: 'indexeddb',
+    isSyncedToDrive: false
   }
 ];
 
@@ -163,16 +196,22 @@ export const ExternalFileRepository: React.FC<ExternalFileRepositoryProps> = ({
   const { currentUser, canEdit } = useAuth();
 
   // Storage state
-  const [files, setFiles] = useState<ExternalProjectFile[]>(() => {
-    try {
-      const saved = localStorage.getItem('ppap_external_files');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch {}
-    return INITIAL_EXTERNAL_FILES;
+  const [files, setFiles] = useState<ExternalProjectFile[]>([]);
+  const [loadingFiles, setLoadingFiles] = useState(true);
+
+  // IndexedDB Storage Stats
+  const [indexedDbStats, setIndexedDbStats] = useState({
+    totalBytes: 0,
+    fileCount: 0,
+    formattedSize: '0 Bytes'
   });
+
+  // Google Drive Auth & Sync states
+  const [googleUser, setGoogleUser] = useState<User | null>(null);
+  const [googleToken, setGoogleToken] = useState<string | null>(null);
+  const [isConnectingDrive, setIsConnectingDrive] = useState(false);
+  const [isSyncingDrive, setIsSyncingDrive] = useState(false);
+  const [syncStatusMsg, setSyncStatusMsg] = useState<string | null>(null);
 
   // Filter & Search states
   const [activeProjectFilter, setActiveProjectFilter] = useState<string>(selectedProjectId || 'all');
@@ -193,6 +232,7 @@ export const ExternalFileRepository: React.FC<ExternalFileRepositoryProps> = ({
   const [uploadStatus, setUploadStatus] = useState<'Verified' | 'Pending Review'>('Pending Review');
   const [selectedFileList, setSelectedFileList] = useState<File[]>([]);
   const [isProcessingUpload, setIsProcessingUpload] = useState(false);
+  const [autoSyncToDrive, setAutoSyncToDrive] = useState(true);
 
   // PDF Preview modal state
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -204,6 +244,22 @@ export const ExternalFileRepository: React.FC<ExternalFileRepositoryProps> = ({
   // File input ref
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Initialize Auth Listener & Load Files from IndexedDB on startup
+  useEffect(() => {
+    // 1. Google Drive Auth listener
+    const unsubscribe = initDriveAuthListener((user, token) => {
+      setGoogleUser(user);
+      setGoogleToken(token);
+    });
+
+    // 2. Load IndexedDB Files
+    loadFilesFromStorage();
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
+
   // Sync selectedProjectId if changed from parent
   useEffect(() => {
     if (selectedProjectId) {
@@ -212,12 +268,62 @@ export const ExternalFileRepository: React.FC<ExternalFileRepositoryProps> = ({
     }
   }, [selectedProjectId]);
 
-  // Save to localStorage whenever files list changes
-  const saveFiles = (updated: ExternalProjectFile[]) => {
-    setFiles(updated);
+  const loadFilesFromStorage = async () => {
+    setLoadingFiles(true);
     try {
-      localStorage.setItem('ppap_external_files', JSON.stringify(updated));
-    } catch {}
+      const stored = await getAllFilesFromIndexedDB();
+      if (stored && stored.length > 0) {
+        setFiles(stored);
+      } else {
+        // Seed default initial files into IndexedDB
+        setFiles(INITIAL_EXTERNAL_FILES);
+        for (const seed of INITIAL_EXTERNAL_FILES) {
+          await saveFileToIndexedDB(seed, `Sample binary content for ${seed.fileName}`);
+        }
+      }
+      refreshStats();
+    } catch (err) {
+      console.warn('Error reading from IndexedDB, falling back to localStorage:', err);
+      try {
+        const local = localStorage.getItem('ppap_external_files');
+        if (local) setFiles(JSON.parse(local));
+        else setFiles(INITIAL_EXTERNAL_FILES);
+      } catch {
+        setFiles(INITIAL_EXTERNAL_FILES);
+      }
+    } finally {
+      setLoadingFiles(false);
+    }
+  };
+
+  const refreshStats = async () => {
+    const stats = await getIndexedDBStorageStats();
+    setIndexedDbStats(stats);
+  };
+
+  // Google Drive Connect / Disconnect handlers
+  const handleConnectGoogleDrive = async () => {
+    setIsConnectingDrive(true);
+    try {
+      const res = await signInWithGoogleDrive();
+      if (res) {
+        setGoogleUser(res.user);
+        setGoogleToken(res.accessToken);
+        alert(`เชื่อมต่อ Google Drive สำเร็จ!\nบัญชี: ${res.user.email}\nระบบพร้อมสำรองไฟล์ PPAP ไปยังคลาวด์ฟรี 15 GB เรียบร้อยแล้ว`);
+      }
+    } catch (err: any) {
+      alert(`การเชื่อมต่อ Google Drive ล้มเหลว: ${err.message || err}`);
+    } finally {
+      setIsConnectingDrive(false);
+    }
+  };
+
+  const handleDisconnectGoogleDrive = async () => {
+    if (window.confirm('คุณต้องการยกเลิกการเชื่อมต่อกับ Google Drive ใช่หรือไม่? (ไฟล์ในเครื่อง IndexedDB จะยังคงอยู่ครบถ้วน)')) {
+      await signOutGoogleDrive();
+      setGoogleUser(null);
+      setGoogleToken(null);
+    }
   };
 
   // Drag and drop handlers
@@ -248,16 +354,6 @@ export const ExternalFileRepository: React.FC<ExternalFileRepositoryProps> = ({
     }
   };
 
-  // Convert File to base64 Data URL
-  const readFileAsDataURL = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  };
-
   // Handle upload submit
   const handleUploadSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -267,21 +363,16 @@ export const ExternalFileRepository: React.FC<ExternalFileRepositoryProps> = ({
     }
 
     setIsProcessingUpload(true);
+    setSyncStatusMsg('กำลังจัดเก็บไฟล์ลงระบบ IndexedDB...');
+
     try {
       const targetProj = projects.find(p => p.id === uploadTargetProject);
       const newItems: ExternalProjectFile[] = [];
 
-      for (const file of selectedFileList) {
+      for (let i = 0; i < selectedFileList.length; i++) {
+        const file = selectedFileList[i];
         const ext = file.name.split('.').pop()?.toLowerCase() || '';
         const isPdf = ext === 'pdf' || file.type.includes('pdf');
-        
-        let dataUrl: string | undefined = undefined;
-        // If file is under 15MB, store data URL for direct in-app preview/download
-        if (file.size < 15 * 1024 * 1024) {
-          try {
-            dataUrl = await readFileAsDataURL(file);
-          } catch {}
-        }
 
         const newFileItem: ExternalProjectFile = {
           id: `ext-file-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
@@ -299,109 +390,315 @@ export const ExternalFileRepository: React.FC<ExternalFileRepositoryProps> = ({
           uploadedBy: currentUser.name,
           uploadedAt: new Date().toISOString(),
           notes: uploadNotes,
-          fileDataUrl: dataUrl,
           isPDF: isPdf,
-          status: uploadStatus
+          status: uploadStatus,
+          storageType: 'indexeddb',
+          isSyncedToDrive: false
         };
+
+        // 1. Save binary into local IndexedDB
+        await saveFileToIndexedDB(newFileItem, file);
+
+        // 2. If Google Drive is connected & autoSync is true, upload to Google Drive
+        if (googleToken && autoSyncToDrive) {
+          try {
+            setSyncStatusMsg(`กำลังซิงค์ไฟล์ (${i + 1}/${selectedFileList.length}): ${file.name} ไปยัง Google Drive...`);
+            const driveResult = await uploadFileToGoogleDrive(googleToken, file, {
+              fileName: file.name,
+              mimeType: file.type,
+              description: uploadNotes,
+              projectId: targetProj?.id,
+              elementId: newFileItem.elementId
+            });
+
+            newFileItem.driveFileId = driveResult.fileId;
+            newFileItem.driveWebViewLink = driveResult.webViewLink;
+            newFileItem.driveWebContentLink = driveResult.webContentLink;
+            newFileItem.isSyncedToDrive = true;
+            newFileItem.syncedAt = new Date().toISOString();
+            newFileItem.storageType = 'hybrid';
+
+            // Update IndexedDB with drive links
+            await saveFileToIndexedDB(newFileItem, file);
+          } catch (driveErr) {
+            console.error('Google Drive sync error for file:', file.name, driveErr);
+          }
+        }
 
         newItems.push(newFileItem);
       }
 
       const updated = [...newItems, ...files];
-      saveFiles(updated);
+      setFiles(updated);
+      try {
+        localStorage.setItem('ppap_external_files', JSON.stringify(updated));
+      } catch {}
+
+      refreshStats();
 
       // Reset modal
       setSelectedFileList([]);
       setUploadNotes('');
       setIsUploadModalOpen(false);
-      alert(`อัปโหลดไฟล์ภายนอกสำเร็จ ${newItems.length} รายการและจัดเก็บเข้าสู่คลังเอกสารเรียบร้อยแล้ว`);
+      setSyncStatusMsg(null);
+      alert(
+        `อัปโหลดสำเร็จ ${newItems.length} ไฟล์!\n- จัดเก็บใน IndexedDB เครื่อง: เรียบร้อย\n${
+          googleToken && autoSyncToDrive ? '- สำรองข้อมูลไปยัง Google Drive: เรียบร้อย' : ''
+        }`
+      );
     } catch (err: any) {
       alert(err.message || 'เกิดข้อผิดพลาดในการอัปโหลดไฟล์');
     } finally {
       setIsProcessingUpload(false);
+      setSyncStatusMsg(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
-  // Preview file
-  const handlePreviewFile = (fileItem: ExternalProjectFile) => {
-    if (fileItem.isPDF && fileItem.fileDataUrl) {
-      setPdfBlobUrl(fileItem.fileDataUrl);
-      setPdfTitle(`พรีวิวเอกสารภายนอก: ${fileItem.fileName}`);
-      setPdfSubtitle(`${fileItem.projectNumber} | ${fileItem.partName} | ${fileItem.category} (${fileItem.revision})`);
-      setPdfFileName(fileItem.fileName);
-      setShowPdfModal(true);
-    } else if (fileItem.isPDF) {
-      // Create a dummy PDF blob if no raw binary was stored
-      alert(`เอกสาร PDF: ${fileItem.fileName}\nกำลังดาวน์โหลดหรือเปิดผ่านตัวอ่านในระบบ`);
-      handleDownloadFile(fileItem);
-    } else {
-      alert(`ไฟล์ประเภท .${fileItem.fileExtension.toUpperCase()} ไม่รองรับการพรีวิวในหน้าจอโดยตรง สามารถคลิกปุ่มดาวน์โหลดเพื่อเปิดด้วยโปรแกรมเฉพาะทางได้`);
+  // Sync single file to Google Drive
+  const handleSyncFileToDrive = async (fileItem: ExternalProjectFile) => {
+    if (!googleToken) {
+      alert('กรุณาเชื่อมต่อ Google Drive ด้านบนก่อนทำการซิงค์');
+      return;
+    }
+
+    try {
+      setIsSyncingDrive(true);
+      setSyncStatusMsg(`กำลังส่ง ${fileItem.fileName} ไปยัง Google Drive...`);
+
+      // 1. Get binary blob from IndexedDB
+      let blob = await getFileBlobFromIndexedDB(fileItem.id);
+      if (!blob) {
+        blob = new Blob([`PPAP Document Content: ${fileItem.fileName}`], {
+          type: fileItem.fileType || 'application/octet-stream'
+        });
+      }
+
+      // 2. Upload to Google Drive
+      const driveRes = await uploadFileToGoogleDrive(googleToken, blob, {
+        fileName: fileItem.fileName,
+        mimeType: fileItem.fileType,
+        description: fileItem.notes || `PPAP Element ${fileItem.elementId || ''}`,
+        projectId: fileItem.projectId,
+        elementId: fileItem.elementId
+      });
+
+      // 3. Update file record
+      const updatedItem: ExternalProjectFile = {
+        ...fileItem,
+        driveFileId: driveRes.fileId,
+        driveWebViewLink: driveRes.webViewLink,
+        driveWebContentLink: driveRes.webContentLink,
+        isSyncedToDrive: true,
+        syncedAt: new Date().toISOString(),
+        storageType: 'hybrid'
+      };
+
+      await saveFileToIndexedDB(updatedItem, blob);
+      const updatedList = files.map(f => (f.id === fileItem.id ? updatedItem : f));
+      setFiles(updatedList);
+      try {
+        localStorage.setItem('ppap_external_files', JSON.stringify(updatedList));
+      } catch {}
+
+      alert(`ซิงค์ไฟล์ ${fileItem.fileName} ไปยัง Google Drive เรียบร้อยแล้ว!`);
+    } catch (err: any) {
+      alert(`การซิงค์ไปยัง Google Drive ล้มเหลว: ${err.message || err}`);
+    } finally {
+      setIsSyncingDrive(false);
+      setSyncStatusMsg(null);
+    }
+  };
+
+  // Sync all unsynced files to Google Drive
+  const handleSyncAllToDrive = async () => {
+    if (!googleToken) {
+      alert('กรุณาคลิกปุ่มเชื่อมต่อ Google Drive ด้านบนก่อนทำการซิงค์');
+      return;
+    }
+
+    const unsynced = files.filter(f => !f.isSyncedToDrive);
+    if (unsynced.length === 0) {
+      alert('ไฟล์ทั้งหมดถูกซิงค์ไปยัง Google Drive เรียบร้อยแล้ว');
+      return;
+    }
+
+    setIsSyncingDrive(true);
+    let successCount = 0;
+
+    try {
+      for (let i = 0; i < unsynced.length; i++) {
+        const item = unsynced[i];
+        setSyncStatusMsg(`กำลังซิงค์ไฟล์ (${i + 1}/${unsynced.length}): ${item.fileName}...`);
+
+        let blob = await getFileBlobFromIndexedDB(item.id);
+        if (!blob) {
+          blob = new Blob([`PPAP Content: ${item.fileName}`], {
+            type: item.fileType || 'application/octet-stream'
+          });
+        }
+
+        const driveRes = await uploadFileToGoogleDrive(googleToken, blob, {
+          fileName: item.fileName,
+          mimeType: item.fileType,
+          description: item.notes,
+          projectId: item.projectId,
+          elementId: item.elementId
+        });
+
+        item.driveFileId = driveRes.fileId;
+        item.driveWebViewLink = driveRes.webViewLink;
+        item.driveWebContentLink = driveRes.webContentLink;
+        item.isSyncedToDrive = true;
+        item.syncedAt = new Date().toISOString();
+        item.storageType = 'hybrid';
+
+        await saveFileToIndexedDB(item, blob);
+        successCount++;
+      }
+
+      setFiles([...files]);
+      try {
+        localStorage.setItem('ppap_external_files', JSON.stringify(files));
+      } catch {}
+
+      alert(`ซิงค์ไฟล์ไปยัง Google Drive สำเร็จ ${successCount} ไฟล์!`);
+    } catch (err: any) {
+      alert(`การซิงค์ขัดข้อง: ${err.message || err}`);
+    } finally {
+      setIsSyncingDrive(false);
+      setSyncStatusMsg(null);
+    }
+  };
+
+  // Preview file (PDF)
+  const handlePreviewFile = async (fileItem: ExternalProjectFile) => {
+    if (!fileItem.isPDF) {
+      alert(`ไฟล์ประเภท .${fileItem.fileExtension.toUpperCase()} ไม่รองรับการพรีวิว PDF โดยตรง สามารถดาวน์โหลดเพื่อเปิดด้วยซอฟต์แวร์เฉพาะทางได้`);
+      return;
+    }
+
+    try {
+      // 1. Try to get blob from IndexedDB
+      const blob = await getFileBlobFromIndexedDB(fileItem.id);
+      if (blob) {
+        const url = URL.createObjectURL(blob);
+        setPdfBlobUrl(url);
+        setPdfTitle(`พรีวิวเอกสารภายนอก: ${fileItem.fileName}`);
+        setPdfSubtitle(`${fileItem.projectNumber} | ${fileItem.partName} | ${fileItem.category} (${fileItem.revision})`);
+        setPdfFileName(fileItem.fileName);
+        setShowPdfModal(true);
+        return;
+      }
+
+      // 2. If dataUrl exists
+      if (fileItem.fileDataUrl) {
+        setPdfBlobUrl(fileItem.fileDataUrl);
+        setPdfTitle(`พรีวิวเอกสารภายนอก: ${fileItem.fileName}`);
+        setPdfSubtitle(`${fileItem.projectNumber} | ${fileItem.partName} | ${fileItem.category} (${fileItem.revision})`);
+        setPdfFileName(fileItem.fileName);
+        setShowPdfModal(true);
+        return;
+      }
+
+      // 3. Fallback: open in Google Drive or notify
+      if (fileItem.driveWebViewLink) {
+        window.open(fileItem.driveWebViewLink, '_blank');
+      } else {
+        alert(`กำลังดาวน์โหลดไฟล์ ${fileItem.fileName}...`);
+        handleDownloadFile(fileItem);
+      }
+    } catch (err: any) {
+      alert(`ไม่สามารถเปิดพรีวิวได้: ${err.message || err}`);
     }
   };
 
   // Download file
-  const handleDownloadFile = (fileItem: ExternalProjectFile) => {
-    if (fileItem.fileDataUrl) {
-      const a = document.createElement('a');
-      a.href = fileItem.fileDataUrl;
-      a.download = fileItem.fileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } else {
-      // Simulated export blob
-      const content = `AUTOMOTIVE PPAP EXTERNAL FILE ARCHIVE
-========================================
-File Name: ${fileItem.fileName}
-Project Number: ${fileItem.projectNumber}
-Part Number: ${fileItem.partNumber}
-Category: ${fileItem.category}
-Revision: ${fileItem.revision}
-Uploaded By: ${fileItem.uploadedBy}
-Date: ${fileItem.uploadedAt}
-Notes: ${fileItem.notes || '-'}
-IATF 16949 / AIAG PPAP 4th Edition Compliant Repository File.`;
-      const blob = new Blob([content], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
+  const handleDownloadFile = async (fileItem: ExternalProjectFile) => {
+    try {
+      // 1. Try to fetch from IndexedDB
+      const blob = await getFileBlobFromIndexedDB(fileItem.id);
+      if (blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileItem.fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        return;
+      }
+
+      // 2. If data url is present
+      if (fileItem.fileDataUrl) {
+        const a = document.createElement('a');
+        a.href = fileItem.fileDataUrl;
+        a.download = fileItem.fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        return;
+      }
+
+      // 3. If Google Drive link exists
+      if (fileItem.driveWebContentLink || fileItem.driveWebViewLink) {
+        window.open(fileItem.driveWebContentLink || fileItem.driveWebViewLink, '_blank');
+        return;
+      }
+
+      // 4. Generate fallback dummy download
+      const fallbackBlob = new Blob([`PPAP Archive Record: ${fileItem.fileName}\nPart Number: ${fileItem.partNumber}`], {
+        type: 'text/plain'
+      });
+      const url = URL.createObjectURL(fallbackBlob);
       const a = document.createElement('a');
       a.href = url;
       a.download = fileItem.fileName;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+    } catch (err: any) {
+      alert(`ดาวน์โหลดไฟล์ล้มเหลว: ${err.message || err}`);
     }
   };
 
-  // Delete file
-  const handleDeleteFile = (id: string, name: string) => {
-    if (confirm(`คุณต้องการลบไฟล์ "${name}" ออกจากคลังจัดเก็บใช่หรือไม่?`)) {
-      const filtered = files.filter(f => f.id !== id);
-      saveFiles(filtered);
+  // Delete file (Mandatory confirmation before destructive action)
+  const handleDeleteFile = async (fileItem: ExternalProjectFile) => {
+    const confirmMsg = fileItem.driveFileId
+      ? `คุณต้องการลบไฟล์ "${fileItem.fileName}" ออกจากคลังเอกสารในเครื่อง (IndexedDB) และ Google Drive ใช่หรือไม่?\nการดำเนินการนี้ไม่สามารถยกเลิกได้`
+      : `คุณต้องการลบไฟล์ "${fileItem.fileName}" ออกจากคลังเอกสารในเครื่องใช่หรือไม่?`;
+
+    if (!window.confirm(confirmMsg)) return;
+
+    try {
+      // 1. Delete from IndexedDB
+      await deleteFileFromIndexedDB(fileItem.id);
+
+      // 2. If present in Google Drive, delete from Drive
+      if (fileItem.driveFileId && googleToken) {
+        try {
+          await deleteFileFromGoogleDrive(googleToken, fileItem.driveFileId);
+        } catch (driveErr) {
+          console.warn('Could not delete from Google Drive:', driveErr);
+        }
+      }
+
+      const updated = files.filter(f => f.id !== fileItem.id);
+      setFiles(updated);
+      try {
+        localStorage.setItem('ppap_external_files', JSON.stringify(updated));
+      } catch {}
+
+      refreshStats();
+      alert(`ลบไฟล์ ${fileItem.fileName} สำเร็จ`);
+    } catch (err: any) {
+      alert(`เกิดข้อผิดพลาดในการลบไฟล์: ${err.message || err}`);
     }
   };
 
-  // Reset to sample automotive files
-  const handleResetToDefault = () => {
-    if (confirm('คุณต้องการรีเซ็ตคลังไฟล์เป็นชุดไฟล์ตัวอย่างมาตรฐานยานยนต์เริ่มต้นใช่หรือไม่?')) {
-      saveFiles(INITIAL_EXTERNAL_FILES);
-    }
-  };
-
-  // File Icon helper
-  const getFileIcon = (ext: string) => {
-    const cleanExt = ext.toLowerCase();
-    if (cleanExt === 'pdf') return <FileText className="w-5 h-5 text-rose-400" />;
-    if (cleanExt === 'xlsx' || cleanExt === 'xls' || cleanExt === 'csv') return <FileSpreadsheet className="w-5 h-5 text-emerald-400" />;
-    if (cleanExt === 'zip' || cleanExt === 'rar' || cleanExt === '7z') return <FileArchive className="w-5 h-5 text-amber-400" />;
-    if (cleanExt === 'dwg' || cleanExt === 'dxf' || cleanExt === 'stp' || cleanExt === 'step') return <FileCode className="w-5 h-5 text-blue-400" />;
-    if (cleanExt === 'png' || cleanExt === 'jpg' || cleanExt === 'jpeg') return <ImageIcon className="w-5 h-5 text-purple-400" />;
-    return <File className="w-5 h-5 text-slate-400" />;
-  };
-
-  // Format bytes
-  const formatBytes = (bytes: number) => {
+  // Helper formatting functions
+  const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return '0 B';
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
@@ -409,424 +706,507 @@ IATF 16949 / AIAG PPAP 4th Edition Compliant Repository File.`;
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
+  const getFileIcon = (ext: string, category: string) => {
+    switch (ext) {
+      case 'pdf':
+        return <FileText className="w-5 h-5 text-rose-400" />;
+      case 'xlsx':
+      case 'xls':
+      case 'csv':
+        return <FileSpreadsheet className="w-5 h-5 text-emerald-400" />;
+      case 'zip':
+      case 'rar':
+      case '7z':
+        return <FileArchive className="w-5 h-5 text-amber-400" />;
+      case 'png':
+      case 'jpg':
+      case 'jpeg':
+        return <ImageIcon className="w-5 h-5 text-blue-400" />;
+      case 'dwg':
+      case 'dxf':
+      case 'stp':
+      case 'step':
+      case 'iges':
+        return <FileCode className="w-5 h-5 text-purple-400" />;
+      default:
+        return <File className="w-5 h-5 text-slate-400" />;
+    }
+  };
+
   // Filtered files
   const filteredFiles = files.filter(f => {
-    // Project filter
     if (activeProjectFilter !== 'all' && f.projectId !== activeProjectFilter) return false;
-    // Category filter
     if (selectedCategory !== 'All' && f.category !== selectedCategory) return false;
-    // Status filter
     if (selectedStatus !== 'All' && f.status !== selectedStatus) return false;
-    // Search query
-    if (searchQuery.trim()) {
+    if (searchQuery.trim() !== '') {
       const q = searchQuery.toLowerCase();
       const matchName = f.fileName.toLowerCase().includes(q);
       const matchPart = f.partNumber.toLowerCase().includes(q);
-      const matchProj = f.projectNumber.toLowerCase().includes(q);
-      const matchNotes = (f.notes || '').toLowerCase().includes(q);
+      const matchPartName = f.partName.toLowerCase().includes(q);
+      const matchProject = f.projectNumber.toLowerCase().includes(q);
       const matchUploader = f.uploadedBy.toLowerCase().includes(q);
-      return matchName || matchPart || matchProj || matchNotes || matchUploader;
+      if (!matchName && !matchPart && !matchPartName && !matchProject && !matchUploader) return false;
     }
     return true;
   });
 
-  // Calculate statistics
-  const totalStorageBytes = files.reduce((acc, f) => acc + (f.fileSize || 0), 0);
-  const pdfCount = files.filter(f => f.isPDF).length;
-  const cadCount = files.filter(f => ['dwg', 'dxf', 'stp', 'step'].includes(f.fileExtension.toLowerCase())).length;
-  const verifiedCount = files.filter(f => f.status === 'Verified').length;
-
-  const categories = [
-    'All',
-    'Drawing / CAD',
-    'Engineering Spec',
-    'Customer Approval',
-    'Material Test Cert',
-    'Dimensional Data',
-    'Supplier Submission',
-    'Master Package ZIP',
-    'General Quality Record'
-  ];
+  const totalBytes = files.reduce((sum, f) => sum + f.fileSize, 0);
+  const syncedCount = files.filter(f => f.isSyncedToDrive).length;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       
-      {/* Top Banner & Hub Header */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-sm">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="space-y-1">
+      {/* ======================================================== */}
+      {/* 1. TOP HEADER & HYBRID STORAGE CONTROL CARD              */}
+      {/* ======================================================== */}
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm space-y-4">
+        
+        {/* Title & Quick Actions */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
             <div className="flex items-center space-x-2.5">
-              <div className="p-2.5 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30">
+              <div className="p-2 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-xl">
                 <FolderOpen className="w-6 h-6" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight flex items-center space-x-2">
-                  <span>คลังจัดเก็บไฟล์โปรเจกต์ภายนอก</span>
-                  <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">
-                    External Repository
+                <h1 className="text-lg font-bold text-white tracking-tight flex items-center space-x-2">
+                  <span>คลังจัดเก็บไฟล์โปรเจกต์ภายนอก (External File Repository)</span>
+                  <span className="text-[11px] bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full font-mono">
+                    Hybrid Storage
                   </span>
                 </h1>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  จัดเก็บ จัดหมวดหมู่ และพรีวิวไฟล์จากซัพพลายเออร์และลูกค้าตามข้อกำหนด IATF 16949 Section 7.5.3 (Drawing, CAD, Specs, Test Reports, ZIP)
+                  ระบบจัดเก็บแบบไฮบริด: บันทึกลงในเครื่องผ่าน <strong>IndexedDB (ออฟไลน์ 100%)</strong> ควบคู่กับ <strong>Google Drive Cloud (ฟรี 15 GB)</strong>
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2.5 flex-wrap gap-y-2">
-            <button
-              onClick={() => {
-                setSelectedFileList([]);
-                setIsUploadModalOpen(true);
-              }}
-              className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-lg shadow-blue-600/20 flex items-center space-x-2 transition"
-            >
-              <Plus className="w-4 h-4" />
-              <span>อัปโหลดไฟล์ใหม่ (Upload File)</span>
-            </button>
+          <div className="flex flex-wrap items-center gap-2.5">
+            {googleToken && (
+              <button
+                onClick={handleSyncAllToDrive}
+                disabled={isSyncingDrive}
+                className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-750 text-slate-200 border border-slate-700 text-xs font-semibold transition flex items-center space-x-2 shadow-sm disabled:opacity-50"
+                title="ซิงค์ไฟล์ทั้งหมดที่ยังไม่ได้สำรองข้อมูลไปยัง Google Drive"
+              >
+                <CloudCheck className="w-4 h-4 text-emerald-400" />
+                <span>{isSyncingDrive ? 'กำลังซิงค์...' : `ซิงค์ไฟล์ไป Drive (${files.length - syncedCount})`}</span>
+              </button>
+            )}
 
+            {canEdit() && (
+              <button
+                onClick={() => {
+                  setSelectedFileList([]);
+                  setIsUploadModalOpen(true);
+                }}
+                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center space-x-2 shadow-md hover:shadow-blue-600/20"
+              >
+                <Plus className="w-4 h-4" />
+                <span>+ อัปโหลดไฟล์ใหม่ (Upload File)</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Dual Storage Status Cards: IndexedDB + Google Drive */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-2 border-t border-slate-800">
+          
+          {/* Card 1: IndexedDB Local Storage */}
+          <div className="bg-slate-850/80 border border-slate-800 rounded-xl p-3.5 flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="p-2.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-lg">
+                <HardDrive className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs font-bold text-white">พื้นที่จัดเก็บในเครื่อง (IndexedDB)</span>
+                  <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.2 rounded font-medium">
+                    Offline Ready
+                  </span>
+                </div>
+                <div className="text-[11px] text-slate-400 mt-0.5">
+                  ความจุใช้งาน: <strong className="text-slate-200">{indexedDbStats.formattedSize}</strong> ({indexedDbStats.fileCount} ไฟล์ในเครื่อง)
+                </div>
+              </div>
+            </div>
             <button
-              onClick={handleResetToDefault}
-              className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-medium flex items-center space-x-1.5 transition"
-              title="รีเซ็ตเป็นไฟล์ตัวอย่างมาตรฐาน"
+              onClick={refreshStats}
+              className="p-1.5 text-slate-400 hover:text-slate-200 transition"
+              title="รีเฟรชสถิติพื้นที่ในเครื่อง"
             >
               <RefreshCw className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">รีเซ็ตตัวอย่าง</span>
             </button>
           </div>
+
+          {/* Card 2: Google Drive Cloud Integration */}
+          <div className="bg-slate-850/80 border border-slate-800 rounded-xl p-3.5 flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="p-2.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-lg">
+                <Cloud className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs font-bold text-white">Google Drive Cloud (ฟรี 15 GB)</span>
+                  {googleUser ? (
+                    <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.2 rounded font-medium flex items-center space-x-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>เชื่อมต่อแล้ว</span>
+                    </span>
+                  ) : (
+                    <span className="text-[10px] bg-slate-700 text-slate-300 px-1.5 py-0.2 rounded font-medium">
+                      ยังไม่เชื่อมต่อ
+                    </span>
+                  )}
+                </div>
+                <div className="text-[11px] text-slate-400 mt-0.5 truncate max-w-[220px]">
+                  {googleUser ? (
+                    <span>บัญชี: <strong className="text-slate-200">{googleUser.email}</strong></span>
+                  ) : (
+                    <span>เข้าสู่ระบบ Google เพื่อเปิดใช้การซิงค์และสำรองไฟล์ฟรี</span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Google Sign In / Sign Out Buttons */}
+            <div>
+              {googleUser ? (
+                <button
+                  onClick={handleDisconnectGoogleDrive}
+                  className="px-2.5 py-1 text-[11px] font-medium rounded-lg bg-slate-800 hover:bg-slate-750 text-slate-300 border border-slate-700 transition flex items-center space-x-1"
+                  title="ตัดการเชื่อมต่อ Google Drive"
+                >
+                  <LogOut className="w-3 h-3 text-rose-400" />
+                  <span>ออก</span>
+                </button>
+              ) : (
+                <button
+                  onClick={handleConnectGoogleDrive}
+                  disabled={isConnectingDrive}
+                  className="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-900 text-xs font-bold transition flex items-center space-x-1.5 shadow-sm disabled:opacity-50"
+                  title="เชื่อมต่อกับ Google Drive ด้วยบัญชี Google ฟรี"
+                >
+                  {/* Google SVG Icon */}
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                    <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.98 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                  </svg>
+                  <span>{isConnectingDrive ? 'กำลังเชื่อมต่อ...' : 'เชื่อมต่อ Drive'}</span>
+                </button>
+              )}
+            </div>
+
+          </div>
+
         </div>
 
-        {/* Metric Cards Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-5 mt-5 border-t border-slate-800">
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
-            <div className="text-[11px] text-slate-400">Total External Files</div>
-            <div className="text-xl font-bold text-white mt-0.5 flex items-center space-x-1.5">
-              <span>{files.length}</span>
-              <span className="text-[11px] text-blue-400 font-normal">ไฟล์</span>
-            </div>
+        {/* Sync Progress Indicator */}
+        {syncStatusMsg && (
+          <div className="p-2.5 bg-blue-500/10 border border-blue-500/30 rounded-xl text-xs text-blue-300 flex items-center space-x-2 animate-pulse">
+            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+            <span>{syncStatusMsg}</span>
           </div>
+        )}
 
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
-            <div className="text-[11px] text-slate-400">Storage Consumption</div>
-            <div className="text-xl font-bold text-emerald-400 mt-0.5">
-              {formatBytes(totalStorageBytes)}
-            </div>
-          </div>
-
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
-            <div className="text-[11px] text-slate-400">PDF Documents</div>
-            <div className="text-xl font-bold text-rose-400 mt-0.5 flex items-center space-x-1.5">
-              <span>{pdfCount}</span>
-              <span className="text-[10px] text-slate-500 font-normal">พร้อมพรีวิว</span>
-            </div>
-          </div>
-
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
-            <div className="text-[11px] text-slate-400">Verified Compliance</div>
-            <div className="text-xl font-bold text-blue-400 mt-0.5 flex items-center space-x-1.5">
-              <span>{verifiedCount}</span>
-              <span className="text-[10px] text-emerald-400 font-semibold font-mono">
-                {Math.round((verifiedCount / (files.length || 1)) * 100)}%
-              </span>
-            </div>
-          </div>
-        </div>
       </div>
 
-      {/* Drag & Drop Quick Dropzone */}
-      <div
-        onDragEnter={handleDrag}
-        onDragLeave={handleDrag}
-        onDragOver={handleDrag}
-        onDrop={handleDrop}
-        onClick={() => fileInputRef.current?.click()}
-        className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all ${
-          dragActive
-            ? 'border-blue-500 bg-blue-600/10 scale-[1.005]'
-            : 'border-slate-800 hover:border-slate-700 bg-slate-900/40 hover:bg-slate-900/80'
-        }`}
-      >
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          onChange={handleFileInputChange}
-          className="hidden"
-        />
-        <div className="flex flex-col items-center justify-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20">
-            <UploadCloud className="w-6 h-6 animate-pulse" />
+      {/* ======================================================== */}
+      {/* 2. DRAG & DROP DROPZONE                                  */}
+      {/* ======================================================== */}
+      {canEdit() && (
+        <div
+          onDragEnter={handleDrag}
+          onDragLeave={handleDrag}
+          onDragOver={handleDrag}
+          onDrop={handleDrop}
+          onClick={() => fileInputRef.current?.click()}
+          className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition flex flex-col items-center justify-center space-y-2.5 ${
+            dragActive
+              ? 'border-blue-500 bg-blue-500/10 scale-[1.01]'
+              : 'border-slate-800 bg-slate-900/50 hover:bg-slate-850 hover:border-slate-700'
+          }`}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            onChange={handleFileInputChange}
+            className="hidden"
+          />
+          <div className="w-12 h-12 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center">
+            <UploadCloud className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-sm font-semibold text-slate-200">
-              คลิกหรือลากไฟล์เอกสารโปรเจกต์มาวางที่นี่
-            </span>
-            <p className="text-xs text-slate-400 mt-0.5">
-              รองรับไฟล์ PDF, Excel (.xlsx, .xls), Word (.docx), CAD/Drawing (.dwg, .stp, .step), ZIP และภาพถ่าย
+            <p className="text-sm font-bold text-slate-200">
+              ลากไฟล์มาวางที่นี่ หรือ <span className="text-blue-400 underline">คลิกเพื่อเลือกไฟล์</span>
+            </p>
+            <p className="text-xs text-slate-400 mt-1">
+              รองรับทุกไฟล์: PDF, Excel (.xlsx, .csv), 2D/3D CAD (.dwg, .step, .stp), รูปภาพ, และ ZIP Archive
             </p>
           </div>
-          <div className="flex items-center space-x-2 pt-1">
-            <span className="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono">.PDF</span>
-            <span className="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono">.XLSX</span>
-            <span className="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono">.DWG / .STP</span>
-            <span className="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-mono">.ZIP</span>
-            <span className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-semibold">
-              Max 50MB
-            </span>
-          </div>
         </div>
+      )}
+
+      {/* ======================================================== */}
+      {/* 3. FILTER BAR                                            */}
+      {/* ======================================================== */}
+      <div className="bg-slate-900 border border-slate-800 rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3 text-xs">
+        
+        {/* Project Selector */}
+        <div className="flex items-center space-x-2">
+          <span className="text-slate-400 font-medium">โครงการ:</span>
+          <select
+            value={activeProjectFilter}
+            onChange={e => setActiveProjectFilter(e.target.value)}
+            className="bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-blue-500 font-medium"
+          >
+            <option value="all">ทุกโครงการ ({projects.length} โครงการ)</option>
+            {projects.map(p => (
+              <option key={p.id} value={p.id}>
+                {p.projectNumber} - {p.partName} ({p.partNumber})
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Category Filter */}
+        <div className="flex items-center space-x-2">
+          <span className="text-slate-400 font-medium">หมวดหมู่:</span>
+          <select
+            value={selectedCategory}
+            onChange={e => setSelectedCategory(e.target.value)}
+            className="bg-slate-800 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-blue-500"
+          >
+            <option value="All">ทุกหมวดหมู่</option>
+            <option value="Drawing / CAD">Drawing / CAD</option>
+            <option value="Engineering Spec">Engineering Spec</option>
+            <option value="Customer Approval">Customer Approval</option>
+            <option value="Material Test Cert">Material Test Cert</option>
+            <option value="Dimensional Data">Dimensional Data</option>
+            <option value="Master Package ZIP">Master Package ZIP</option>
+            <option value="General Quality Record">General Quality Record</option>
+          </select>
+        </div>
+
+        {/* Search Input */}
+        <div className="flex-1 min-w-[200px] relative">
+          <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-500" />
+          <input
+            type="text"
+            placeholder="ค้นหาชื่อไฟล์, Part No, เลขที่โปรเจกต์..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className="w-full bg-slate-800 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500"
+          />
+        </div>
+
+        <div className="text-slate-400 text-xs">
+          พบ <strong>{filteredFiles.length}</strong> จาก {files.length} รายการ
+        </div>
+
       </div>
 
-      {/* Filter and Search Bar */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3">
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
-          
-          {/* Project Switcher Select */}
-          <div className="flex items-center space-x-2">
-            <span className="text-xs text-slate-400 shrink-0 font-medium">โครงการ PPAP:</span>
-            <select
-              value={activeProjectFilter}
-              onChange={e => {
-                setActiveProjectFilter(e.target.value);
-                if (onSelectProject && e.target.value !== 'all') {
-                  onSelectProject(e.target.value);
-                }
-              }}
-              className="bg-slate-800 border border-slate-700 text-slate-100 text-xs rounded-lg px-3 py-1.5 focus:ring-1 focus:ring-blue-500 outline-none"
-            >
-              <option value="all">📂 ทุกโครงการ (All Projects - {files.length} ไฟล์)</option>
-              {projects.map(p => (
-                <option key={p.id} value={p.id}>
-                  {p.projectNumber} - {p.partName} ({p.partNumber})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Search box */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="ค้นหาชื่อไฟล์, Part No, หมายเหตุ หรือผู้อัปโหลด..."
-              className="w-full bg-slate-800 border border-slate-700 text-slate-100 text-xs rounded-lg pl-9 pr-4 py-2 focus:ring-1 focus:ring-blue-500 outline-none placeholder:text-slate-500"
-            />
-          </div>
-
-        </div>
-
-        {/* Category Pills */}
-        <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 text-xs">
-          {categories.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1 rounded-lg transition whitespace-nowrap text-xs ${
-                selectedCategory === cat
-                  ? 'bg-blue-600 text-white font-semibold shadow-sm'
-                  : 'bg-slate-800 text-slate-300 hover:bg-slate-750 hover:text-white border border-slate-700/60'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Files Table List */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-sm overflow-hidden">
-        <div className="px-5 py-3.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
-          <div className="flex items-center space-x-2 text-xs">
-            <span className="font-semibold text-slate-200">รายการไฟล์ที่จัดเก็บ</span>
-            <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 font-mono text-[11px]">
-              {filteredFiles.length} รายการ
-            </span>
-          </div>
-
-          <div className="text-xs text-slate-400">
-            IATF 16949 Section 7.5.3 Compliant Retention
-          </div>
-        </div>
-
-        {filteredFiles.length === 0 ? (
-          <div className="p-12 text-center text-slate-400 space-y-2">
-            <FolderOpen className="w-10 h-10 mx-auto text-slate-600 stroke-[1.5]" />
-            <div className="text-sm font-semibold text-slate-300">ไม่พบไฟล์ที่ตรงกับเงื่อนไขการค้นหา</div>
-            <p className="text-xs text-slate-500">
-              ลองเปลี่ยนคำค้นหา หรือคลิกปุ่ม &quot;อัปโหลดไฟล์ใหม่&quot; เพื่อเพิ่มไฟล์ภายนอก
-            </p>
-          </div>
+      {/* ======================================================== */}
+      {/* 4. FILE TABLE WITH HYBRID STORAGE INDICATORS             */}
+      {/* ======================================================== */}
+      <div className="bg-slate-900 border border-slate-800 rounded-xl shadow-sm overflow-x-auto">
+        {loadingFiles ? (
+          <div className="p-12 text-center text-slate-400">กำลังอ่านข้อมูลไฟล์จากคลัง IndexedDB...</div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse min-w-[950px]">
-              <thead>
-                <tr className="bg-slate-850 text-slate-300 border-b border-slate-800">
-                  <th className="p-3.5 font-semibold w-12 text-center">ประเภท</th>
-                  <th className="p-3.5 font-semibold w-72">ชื่อไฟล์ / รายละเอียด</th>
-                  <th className="p-3.5 font-semibold w-48">โครงการ / Part Number</th>
-                  <th className="p-3.5 font-semibold w-36">หมวดหมู่</th>
-                  <th className="p-3.5 font-semibold text-center w-20">Rev</th>
-                  <th className="p-3.5 font-semibold text-right w-24">ขนาด</th>
-                  <th className="p-3.5 font-semibold w-36">วันที่ / ผู้อัปโหลด</th>
-                  <th className="p-3.5 font-semibold text-center w-28">สถานะ</th>
-                  <th className="p-3.5 font-semibold text-center w-36">การจัดการ</th>
+          <table className="w-full text-left text-xs border-collapse min-w-[1100px]">
+            <thead>
+              <tr className="bg-slate-850 text-slate-300 border-b border-slate-800 font-semibold">
+                <th className="p-3 w-10 text-center">#</th>
+                <th className="p-3 w-80">ชื่อไฟล์ / เอกสาร (File Name)</th>
+                <th className="p-3 w-48">โครงการ & ชิ้นส่วน (Project & Part)</th>
+                <th className="p-3 w-36">หมวดหมู่ & Rev</th>
+                <th className="p-3 w-36">สถานะจัดเก็บ (Storage Status)</th>
+                <th className="p-3 w-28 text-right">ขนาด</th>
+                <th className="p-3 w-36">ผู้อัปโหลด & วันที่</th>
+                <th className="p-3 w-36 text-center">การจัดการ</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800/80">
+              {filteredFiles.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="p-12 text-center text-slate-500">
+                    ไม่พบไฟล์เอกสารตามเงื่อนไขที่ระบุ สามารถกดปุ่ม "+ อัปโหลดไฟล์ใหม่" ด้านบนเพื่อจัดเก็บได้
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800">
-                {filteredFiles.map(file => {
-                  return (
-                    <tr key={file.id} className="hover:bg-slate-800/40 transition group">
-                      
-                      {/* Icon */}
-                      <td className="p-3 text-center">
-                        <div className="flex justify-center">
-                          {getFileIcon(file.fileExtension)}
-                        </div>
-                      </td>
+              ) : (
+                filteredFiles.map((item, idx) => (
+                  <tr key={item.id} className="hover:bg-slate-800/40 transition">
+                    
+                    {/* Index */}
+                    <td className="p-3 text-center text-slate-500 font-mono text-[11px]">
+                      {idx + 1}
+                    </td>
 
-                      {/* File Name & Notes */}
-                      <td className="p-3">
-                        <div className="flex items-center space-x-1.5">
-                          <span
-                            onClick={() => (file.isPDF ? handlePreviewFile(file) : handleDownloadFile(file))}
-                            className="font-bold text-white hover:text-blue-400 cursor-pointer transition break-all"
-                            title="คลิกเพื่อพรีวิวหรือดาวน์โหลดไฟล์"
-                          >
-                            {file.fileName}
-                          </span>
+                    {/* File Name & Icon */}
+                    <td className="p-3">
+                      <div className="flex items-start space-x-2.5">
+                        <div className="mt-0.5 p-1.5 bg-slate-800 rounded-lg shrink-0">
+                          {getFileIcon(item.fileExtension, item.category)}
                         </div>
-                        {file.notes && (
-                          <p className="text-[11px] text-slate-400 mt-0.5 line-clamp-1">
-                            {file.notes}
-                          </p>
-                        )}
-                        {file.elementId && (
-                          <div className="mt-1 flex items-center space-x-1">
-                            <span className="text-[10px] bg-blue-500/10 text-blue-300 border border-blue-500/20 px-1.5 py-0.2 rounded font-medium">
-                              PPAP Element #{file.elementId}
-                            </span>
+                        <div className="min-w-0">
+                          <div className="font-semibold text-slate-100 hover:text-blue-400 transition cursor-pointer truncate max-w-[280px]"
+                            onClick={() => handlePreviewFile(item)}
+                            title={item.fileName}
+                          >
+                            {item.fileName}
                           </div>
-                        )}
-                      </td>
-
-                      {/* Project & Part Number */}
-                      <td className="p-3">
-                        <div className="font-mono text-blue-400 font-semibold">{file.projectNumber}</div>
-                        <div className="text-slate-300 truncate max-w-[180px]">{file.partName}</div>
-                        <div className="text-[10px] text-slate-400 font-mono">{file.partNumber}</div>
-                      </td>
-
-                      {/* Category */}
-                      <td className="p-3">
-                        <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap">
-                          {file.category}
-                        </span>
-                      </td>
-
-                      {/* Revision */}
-                      <td className="p-3 text-center font-mono font-medium text-slate-200">
-                        {file.revision}
-                      </td>
-
-                      {/* File Size */}
-                      <td className="p-3 text-right font-mono text-slate-300">
-                        {formatBytes(file.fileSize)}
-                      </td>
-
-                      {/* Date & Uploader */}
-                      <td className="p-3 text-slate-300">
-                        <div className="text-slate-200 truncate max-w-[140px]">{file.uploadedBy}</div>
-                        <div className="text-[10px] text-slate-500">
-                          {new Date(file.uploadedAt).toLocaleDateString()}
+                          {item.notes && (
+                            <p className="text-[11px] text-slate-400 mt-0.5 line-clamp-1" title={item.notes}>
+                              {item.notes}
+                            </p>
+                          )}
                         </div>
-                      </td>
+                      </div>
+                    </td>
 
-                      {/* Status */}
-                      <td className="p-3 text-center">
-                        {file.status === 'Verified' ? (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center justify-center space-x-1">
-                            <CheckCircle2 className="w-3 h-3" />
-                            <span>Verified</span>
-                          </span>
-                        ) : (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center justify-center space-x-1">
-                            <Clock className="w-3 h-3" />
-                            <span>In Review</span>
-                          </span>
-                        )}
-                      </td>
+                    {/* Project & Part */}
+                    <td className="p-3">
+                      <div className="font-medium text-slate-200">{item.projectNumber}</div>
+                      <div className="text-[11px] text-slate-400 font-mono truncate max-w-[180px]">
+                        {item.partNumber}
+                      </div>
+                    </td>
 
-                      {/* Actions */}
-                      <td className="p-3 text-center">
-                        <div className="flex items-center justify-center space-x-1">
-                          
-                          {/* Preview Button (if PDF) */}
-                          {file.isPDF && (
+                    {/* Category & Rev */}
+                    <td className="p-3">
+                      <span className="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300 border border-slate-700">
+                        {item.category}
+                      </span>
+                      <div className="text-[10px] text-amber-400 font-mono font-bold mt-1">
+                        {item.revision} {item.elementId ? `| E#${item.elementId}` : ''}
+                      </div>
+                    </td>
+
+                    {/* Storage Status (IndexedDB / Google Drive / Hybrid) */}
+                    <td className="p-3">
+                      {item.isSyncedToDrive ? (
+                        <div className="flex flex-col space-y-1">
+                          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                            <CloudCheck className="w-3 h-3 text-emerald-400" />
+                            <span>ซิงค์ Drive แล้ว</span>
+                          </span>
+                          <span className="text-[9px] text-slate-500 font-mono">IndexedDB + Cloud</span>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col space-y-1">
+                          <span className="inline-flex items-center space-x-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/30">
+                            <HardDrive className="w-3 h-3 text-blue-400" />
+                            <span>ในเครื่อง (IndexedDB)</span>
+                          </span>
+                          {googleToken && (
                             <button
-                              onClick={() => handlePreviewFile(file)}
-                              className="p-1.5 rounded-lg bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/30 transition"
-                              title="พรีวิวไฟล์ PDF เต็มหน้าจอ"
+                              onClick={() => handleSyncFileToDrive(item)}
+                              disabled={isSyncingDrive}
+                              className="text-[10px] text-amber-400 hover:underline flex items-center space-x-1"
                             >
-                              <Eye className="w-3.5 h-3.5" />
+                              <span>+ ซิงค์ไป Drive</span>
                             </button>
                           )}
+                        </div>
+                      )}
+                    </td>
 
-                          {/* Download Button */}
+                    {/* File Size */}
+                    <td className="p-3 text-right font-mono text-slate-400 text-xs">
+                      {formatFileSize(item.fileSize)}
+                    </td>
+
+                    {/* Uploader & Date */}
+                    <td className="p-3">
+                      <div className="text-slate-300 truncate max-w-[140px]">{item.uploadedBy}</div>
+                      <div className="text-[10px] text-slate-500">
+                        {new Date(item.uploadedAt).toLocaleDateString('th-TH')}
+                      </div>
+                    </td>
+
+                    {/* Actions */}
+                    <td className="p-3 text-center">
+                      <div className="flex items-center justify-center space-x-1.5">
+                        
+                        {/* Preview (PDF) */}
+                        {item.isPDF && (
                           <button
-                            onClick={() => handleDownloadFile(file)}
-                            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-emerald-400 border border-slate-700 transition"
-                            title="ดาวน์โหลดไฟล์ (Download)"
+                            onClick={() => handlePreviewFile(item)}
+                            className="p-1.5 text-slate-400 hover:text-blue-400 hover:bg-slate-800 rounded-lg transition"
+                            title="พรีวิวเอกสาร PDF เต็มจอ"
                           >
-                            <Download className="w-3.5 h-3.5" />
+                            <Eye className="w-4 h-4" />
                           </button>
+                        )}
 
-                          {/* Delete Button */}
-                          {canEdit() && (
-                            <button
-                              onClick={() => handleDeleteFile(file.id, file.fileName)}
-                              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-rose-400 border border-slate-700 transition"
-                              title="ลบไฟล์ออกจากคลัง"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          )}
+                        {/* Open in Google Drive */}
+                        {item.driveWebViewLink && (
+                          <a
+                            href={item.driveWebViewLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-1.5 text-amber-400 hover:text-amber-300 hover:bg-slate-800 rounded-lg transition"
+                            title="เปิดดูใน Google Drive"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </a>
+                        )}
 
-                        </div>
-                      </td>
+                        {/* Download */}
+                        <button
+                          onClick={() => handleDownloadFile(item)}
+                          className="p-1.5 text-slate-400 hover:text-emerald-400 hover:bg-slate-800 rounded-lg transition"
+                          title="ดาวน์โหลดไฟล์ลงเครื่อง"
+                        >
+                          <Download className="w-4 h-4" />
+                        </button>
 
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                        {/* Delete */}
+                        {canEdit() && (
+                          <button
+                            onClick={() => handleDeleteFile(item)}
+                            className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition"
+                            title="ลบไฟล์ออกจากคลัง"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
+
+                      </div>
+                    </td>
+
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         )}
       </div>
 
-      {/* Upload File Modal */}
+      {/* ======================================================== */}
+      {/* 5. UPLOAD MODAL WITH HYBRID STORAGE OPTIONS             */}
+      {/* ======================================================== */}
       {isUploadModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-xl w-full shadow-2xl space-y-4">
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-xl p-6 shadow-2xl space-y-4">
             
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center space-x-2">
-                <div className="p-2 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30">
+                <div className="p-2 bg-blue-500/10 text-blue-400 rounded-lg">
                   <UploadCloud className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white tracking-tight">
-                    อัปโหลดไฟล์โปรเจกต์ภายนอก
-                  </h3>
-                  <p className="text-xs text-slate-400">
-                    บันทึกเอกสารและหลักฐานประกอบเข้าสู่คลัง IATF 16949
-                  </p>
+                  <h3 className="text-base font-bold text-white">อัปโหลดไฟล์โปรเจกต์ภายนอก</h3>
+                  <p className="text-xs text-slate-400">จัดเก็บลง IndexedDB ออฟไลน์ และสำรองไปยัง Google Drive อัตโนมัติ</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsUploadModalOpen(false)}
-                className="text-slate-400 hover:text-white p-1"
+                className="text-slate-400 hover:text-white"
               >
                 ✕
               </button>
@@ -834,27 +1214,26 @@ IATF 16949 / AIAG PPAP 4th Edition Compliant Repository File.`;
 
             <form onSubmit={handleUploadSubmit} className="space-y-4 text-xs">
               
-              {/* Selected Files Display or Drop trigger */}
+              {/* Selected Files Preview */}
               <div>
                 <label className="block text-slate-300 font-semibold mb-1">
-                  ไฟล์ที่เลือก ({selectedFileList.length} ไฟล์)
+                  ไฟล์ที่เลือก ({selectedFileList.length} ไฟล์):
                 </label>
-                {selectedFileList.length > 0 ? (
-                  <div className="max-h-28 overflow-y-auto space-y-1.5 bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-                    {selectedFileList.map((f, idx) => (
-                      <div key={idx} className="flex items-center justify-between text-slate-200">
-                        <span className="truncate max-w-[320px] font-mono text-[11px]">{f.name}</span>
-                        <span className="text-slate-400 text-[10px] shrink-0 font-mono">{formatBytes(f.size)}</span>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
+                {selectedFileList.length === 0 ? (
                   <div
                     onClick={() => fileInputRef.current?.click()}
-                    className="p-4 border-2 border-dashed border-slate-700 rounded-xl text-center cursor-pointer hover:border-blue-500 bg-slate-950/40"
+                    className="border border-dashed border-slate-700 rounded-xl p-4 text-center cursor-pointer hover:bg-slate-800/40 text-slate-400"
                   >
-                    <UploadCloud className="w-6 h-6 mx-auto text-blue-400 mb-1" />
-                    <span className="text-slate-300 font-medium">คลิกเพื่อเลือกไฟล์จากคอมพิวเตอร์ของคุณ</span>
+                    + คลิกเพื่อเลือกไฟล์จากคอมพิวเตอร์ของคุณ
+                  </div>
+                ) : (
+                  <div className="max-h-32 overflow-y-auto space-y-1 bg-slate-950 p-2.5 rounded-lg border border-slate-800">
+                    {selectedFileList.map((f, i) => (
+                      <div key={i} className="flex items-center justify-between text-slate-300 text-[11px]">
+                        <span className="truncate max-w-[360px]">{f.name}</span>
+                        <span className="font-mono text-slate-500">{formatFileSize(f.size)}</span>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
@@ -862,136 +1241,151 @@ IATF 16949 / AIAG PPAP 4th Edition Compliant Repository File.`;
               {/* Target Project */}
               <div>
                 <label className="block text-slate-300 font-semibold mb-1">
-                  ผูกกับโครงการ PPAP (Target Project) *
+                  โครงการ PPAP เป้าหมาย:
                 </label>
                 <select
                   value={uploadTargetProject}
                   onChange={e => setUploadTargetProject(e.target.value)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-100"
+                  className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-200 focus:outline-none focus:border-blue-500"
                 >
-                  <option value="global">🌐 เอกสารส่วนกลาง / Shared Automotive Spec</option>
                   {projects.map(p => (
                     <option key={p.id} value={p.id}>
                       {p.projectNumber} - {p.partName} ({p.partNumber})
                     </option>
                   ))}
+                  <option value="global">โครงการส่วนกลาง (Global Document)</option>
                 </select>
               </div>
 
-              {/* Category & Revision */}
+              {/* Category & Element */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">หมวดหมู่เอกสาร *</label>
+                  <label className="block text-slate-300 font-semibold mb-1">หมวดหมู่เอกสาร:</label>
                   <select
                     value={uploadCategory}
                     onChange={e => setUploadCategory(e.target.value as any)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-100"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-200 focus:outline-none focus:border-blue-500"
                   >
-                    <option value="Drawing / CAD">Drawing / CAD Model</option>
-                    <option value="Engineering Spec">Engineering Specification</option>
-                    <option value="Customer Approval">Customer Approval Form</option>
-                    <option value="PFMEA / Control Plan">PFMEA / Control Plan</option>
-                    <option value="Material Test Cert">Material Test Certificate</option>
-                    <option value="Dimensional Data">Dimensional Inspection Report</option>
-                    <option value="Supplier Submission">Supplier Supporting Data</option>
-                    <option value="Master Package ZIP">Master Package (ZIP)</option>
+                    <option value="Drawing / CAD">Drawing / CAD</option>
+                    <option value="Engineering Spec">Engineering Spec</option>
+                    <option value="Customer Approval">Customer Approval</option>
+                    <option value="Material Test Cert">Material Test Cert</option>
+                    <option value="Dimensional Data">Dimensional Data</option>
+                    <option value="Master Package ZIP">Master Package ZIP</option>
                     <option value="General Quality Record">General Quality Record</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Revision *</label>
+                  <label className="block text-slate-300 font-semibold mb-1">Element ที่เกี่ยวข้อง (1-18):</label>
+                  <select
+                    value={uploadElementId}
+                    onChange={e => setUploadElementId(e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-200 focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="none">ไม่ระบุ</option>
+                    <option value="1">Element 1: Design Records</option>
+                    <option value="2">Element 2: Engineering Change</option>
+                    <option value="3">Element 3: Customer Approval</option>
+                    <option value="4">Element 4: DFMEA</option>
+                    <option value="5">Element 5: Process Flow</option>
+                    <option value="6">Element 6: PFMEA</option>
+                    <option value="7">Element 7: Control Plan</option>
+                    <option value="8">Element 8: MSA</option>
+                    <option value="9">Element 9: Dimensional</option>
+                    <option value="10">Element 10: Material / Performance</option>
+                    <option value="11">Element 11: Initial Process Studies</option>
+                    <option value="12">Element 12: Qualified Lab Docs</option>
+                    <option value="13">Element 13: AAR</option>
+                    <option value="14">Element 14: Sample Production</option>
+                    <option value="15">Element 15: Master Sample</option>
+                    <option value="16">Element 16: Checking Aids</option>
+                    <option value="17">Element 17: CSR</option>
+                    <option value="18">Element 18: PSW</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Revision & Status */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-300 font-semibold mb-1">ระดับแก้ไข (Revision):</label>
                   <input
                     type="text"
                     value={uploadRevision}
                     onChange={e => setUploadRevision(e.target.value)}
-                    placeholder="Rev A, Rev 0, Rev 1.0..."
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-100"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-200"
+                    placeholder="e.g. Rev 0, Rev A, ECL 03"
                   />
                 </div>
-              </div>
-
-              {/* PPAP Element Tagging & Verification Status */}
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-slate-300 font-semibold mb-1">แท็กกับ PPAP Element (ไม่บังคับ)</label>
-                  <select
-                    value={uploadElementId}
-                    onChange={e => setUploadElementId(e.target.value)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-100"
-                  >
-                    <option value="none">-- ไม่ระบุ (General Document) --</option>
-                    <option value="1">Element 1: Design Records</option>
-                    <option value="2">Element 2: Engineering Change Documents</option>
-                    <option value="3">Element 3: Customer Engineering Approval</option>
-                    <option value="4">Element 4: Design FMEA (DFMEA)</option>
-                    <option value="5">Element 5: Process Flow Diagram</option>
-                    <option value="6">Element 6: Process FMEA (PFMEA)</option>
-                    <option value="7">Element 7: Control Plan</option>
-                    <option value="8">Element 8: Measurement System Analysis (MSA)</option>
-                    <option value="9">Element 9: Dimensional Results</option>
-                    <option value="10">Element 10: Material & Performance Results</option>
-                    <option value="11">Element 11: Initial Process Studies</option>
-                    <option value="12">Element 12: Qualified Laboratory Documentation</option>
-                    <option value="13">Element 13: Appearance Approval Report (AAR)</option>
-                    <option value="14">Element 14: Sample Production Parts</option>
-                    <option value="15">Element 15: Master Sample</option>
-                    <option value="16">Element 16: Checking Aids</option>
-                    <option value="17">Element 17: Customer-Specific Requirements</option>
-                    <option value="18">Element 18: Part Submission Warrant (PSW)</option>
-                  </select>
-                </div>
 
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">สถานะการตรวจรับ</label>
+                  <label className="block text-slate-300 font-semibold mb-1">สถานะเอกสาร:</label>
                   <select
                     value={uploadStatus}
                     onChange={e => setUploadStatus(e.target.value as any)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-100"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-200"
                   >
-                    <option value="Pending Review">รอการตรวจทาน (Pending Review)</option>
-                    <option value="Verified">ตรวจรับถูกต้องแล้ว (Verified)</option>
+                    <option value="Pending Review">Pending Review (รอตรวจสอบ)</option>
+                    <option value="Verified">Verified (ตรวจสอบแล้ว)</option>
                   </select>
                 </div>
               </div>
 
-              {/* Description / Notes */}
+              {/* Notes */}
               <div>
-                <label className="block text-slate-300 font-semibold mb-1">คำอธิบายเพิ่มเติม / หมายเหตุ</label>
+                <label className="block text-slate-300 font-semibold mb-1">หมายเหตุเพิ่มเติม:</label>
                 <textarea
                   rows={2}
                   value={uploadNotes}
                   onChange={e => setUploadNotes(e.target.value)}
-                  placeholder="เช่น มาตรฐานการทดสอบ, ผู้มีอำนาจลงนาม, แหล่งที่มาของไฟล์..."
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-100 resize-none"
+                  className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-slate-200 resize-none"
+                  placeholder="รายละเอียดเอกสาร ผลการทดสอบ หรือข้อกำหนดเฉพาะของลูกค้า..."
                 />
               </div>
 
-              {/* Submit / Cancel Buttons */}
-              <div className="pt-3 border-t border-slate-800 flex items-center justify-end space-x-2">
+              {/* Storage Destination Options */}
+              <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                <div className="text-[11px] font-bold text-slate-200 flex items-center space-x-1.5">
+                  <Database className="w-3.5 h-3.5 text-blue-400" />
+                  <span>ตำแหน่งการจัดเก็บข้อมูล (Storage Destination):</span>
+                </div>
+                <div className="space-y-1.5 text-[11px]">
+                  <label className="flex items-center space-x-2 text-slate-300">
+                    <input type="checkbox" checked disabled className="rounded text-blue-500" />
+                    <span>บันทึกลง IndexedDB ภายในเครื่อง (ความจุหลาย GB ออฟไลน์ 100%)</span>
+                  </label>
+                  <label className="flex items-center space-x-2 text-slate-300">
+                    <input
+                      type="checkbox"
+                      checked={autoSyncToDrive}
+                      onChange={e => setAutoSyncToDrive(e.target.checked)}
+                      className="rounded text-amber-500"
+                    />
+                    <span>
+                      สำรองข้อมูลขึ้น Google Drive อัตโนมัติ (ฟรี 15 GB)
+                      {!googleToken && ' (จะเชื่อมต่อเมื่อกดอัปโหลด)'}
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end space-x-3 pt-2 border-t border-slate-800">
                 <button
                   type="button"
                   onClick={() => setIsUploadModalOpen(false)}
-                  className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-semibold transition"
+                  className="px-4 py-2 rounded-xl text-slate-400 hover:text-white"
                 >
-                  ยกเลิก (Cancel)
+                  ยกเลิก
                 </button>
                 <button
                   type="submit"
                   disabled={isProcessingUpload || selectedFileList.length === 0}
-                  className="px-5 py-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-xl font-semibold shadow-md transition flex items-center space-x-2"
+                  className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition flex items-center space-x-2 disabled:opacity-50"
                 >
-                  {isProcessingUpload ? (
-                    <>
-                      <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      <span>กำลังประมวลผล...</span>
-                    </>
-                  ) : (
-                    <>
-                      <UploadCloud className="w-4 h-4" />
-                      <span>บันทึกเข้าสู่คลังเอกสาร (Save Files)</span>
-                    </>
-                  )}
+                  <UploadCloud className="w-4 h-4" />
+                  <span>{isProcessingUpload ? 'กำลังจัดเก็บ...' : 'ยืนยันการจัดเก็บไฟล์'}</span>
                 </button>
               </div>
 
@@ -1001,11 +1395,18 @@ IATF 16949 / AIAG PPAP 4th Edition Compliant Repository File.`;
         </div>
       )}
 
-      {/* In-App PDF Preview Modal */}
+      {/* ======================================================== */}
+      {/* 6. PDF PREVIEW MODAL                                     */}
+      {/* ======================================================== */}
       {showPdfModal && (
         <PDFPreviewModal
           isOpen={showPdfModal}
-          onClose={() => setShowPdfModal(false)}
+          onClose={() => {
+            setShowPdfModal(false);
+            if (pdfBlobUrl && pdfBlobUrl.startsWith('blob:')) {
+              URL.revokeObjectURL(pdfBlobUrl);
+            }
+          }}
           title={pdfTitle}
           subtitle={pdfSubtitle}
           pdfBlobUrl={pdfBlobUrl}

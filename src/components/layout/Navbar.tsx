@@ -14,7 +14,9 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Maximize2,
-  Minimize2
+  Minimize2,
+  LogOut,
+  Users
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -24,7 +26,7 @@ import { Notification, SupportedLanguage, UserRole } from '../../types/ppap';
 interface NavbarProps {
   onOpenNewProject: () => void;
   onOpenAIGenerator: () => void;
-  onNavigate: (view: 'dashboard' | 'projects' | 'completeness' | 'audit' | 'files') => void;
+  onNavigate: (view: 'dashboard' | 'projects' | 'completeness' | 'audit' | 'files' | 'users') => void;
   isSidebarCollapsed?: boolean;
   onToggleSidebar?: () => void;
 }
@@ -36,7 +38,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   isSidebarCollapsed = false,
   onToggleSidebar
 }) => {
-  const { currentUser, allUsers, switchUser, switchRole } = useAuth();
+  const { currentUser, allUsers, switchUser, switchRole, logout } = useAuth();
   const { language, setLanguage, t } = useLanguage();
 
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -327,6 +329,22 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <div className="text-slate-400 text-xs mt-0.5">{currentUser.department}</div>
                 </div>
 
+                {/* Admin Management Shortcut */}
+                {currentUser.role === 'Administrator' && (
+                  <div className="px-3 py-2 border-b border-slate-700 bg-purple-500/10">
+                    <button
+                      onClick={() => {
+                        onNavigate('users');
+                        setShowUserMenu(false);
+                      }}
+                      className="w-full text-left px-2.5 py-1.5 rounded-lg bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 border border-purple-500/40 flex items-center space-x-2 font-semibold transition"
+                    >
+                      <Users className="w-3.5 h-3.5 text-purple-300" />
+                      <span>จัดการสมาชิก & รหัสผ่าน (Admin)</span>
+                    </button>
+                  </div>
+                )}
+
                 {/* Switch Role Fast Bar */}
                 <div className="px-4 py-2 border-b border-slate-700">
                   <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1.5">
@@ -376,6 +394,21 @@ export const Navbar: React.FC<NavbarProps> = ({
                     ))}
                   </div>
                 </div>
+
+                {/* Sign Out Action */}
+                <div className="px-4 py-2 border-t border-slate-700 bg-slate-850/50 rounded-b-xl">
+                  <button
+                    onClick={() => {
+                      logout();
+                      setShowUserMenu(false);
+                    }}
+                    className="w-full text-left px-2.5 py-1.5 rounded-lg flex items-center space-x-2 text-xs font-semibold text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>ออกจากระบบ (Sign Out)</span>
+                  </button>
+                </div>
+
               </div>
             )}
           </div>

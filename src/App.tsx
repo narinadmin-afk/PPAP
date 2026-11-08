@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
+import { LoginPage } from './components/auth/LoginPage';
 import { Navbar } from './components/layout/Navbar';
 import { Sidebar, SidebarView } from './components/layout/Sidebar';
 import { Dashboard } from './components/dashboard/Dashboard';
 import { ProjectList } from './components/projects/ProjectList';
 import { ProjectDetail } from './components/projects/ProjectDetail';
 import { ExternalFileRepository } from './components/files/ExternalFileRepository';
+import { UserManagementView } from './components/admin/UserManagementView';
 import { NewProjectModal } from './components/projects/NewProjectModal';
 import { AIDocumentGeneratorModal } from './components/ai/AIDocumentGeneratorModal';
 import { api } from './services/api';
@@ -60,7 +62,13 @@ const FALLBACK_PROJECTS: PPAPProject[] = [
 ];
 
 function MainApp() {
+  const { isAuthenticated } = useAuth();
   const { t } = useLanguage();
+
+  if (!isAuthenticated) {
+    return <LoginPage />;
+  }
+
   const [currentView, setCurrentView] = useState<SidebarView>('dashboard');
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [showNewProjectModal, setShowNewProjectModal] = useState(false);
@@ -195,6 +203,8 @@ function MainApp() {
               selectedProjectId={null}
               onSelectProject={handleSelectProject}
             />
+          ) : currentView === 'users' ? (
+            <UserManagementView />
           ) : currentView === 'dashboard' ? (
             <Dashboard
               onSelectProject={handleSelectProject}

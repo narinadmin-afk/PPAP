@@ -20,6 +20,10 @@ export interface User {
   department: string;
   avatarUrl?: string;
   signature?: string;
+  username?: string;
+  password?: string;
+  isActive?: boolean;
+  createdAt?: string;
 }
 
 export type PPAPLevel = 1 | 2 | 3 | 4 | 5;
@@ -316,6 +320,12 @@ export interface ExternalProjectFile {
   fileDataUrl?: string;
   isPDF?: boolean;
   status: 'Verified' | 'Pending Review' | 'Archived';
+  storageType?: 'indexeddb' | 'google-drive' | 'hybrid' | 'local';
+  driveFileId?: string;
+  driveWebViewLink?: string;
+  driveWebContentLink?: string;
+  isSyncedToDrive?: boolean;
+  syncedAt?: string;
 }
 
 export interface PPAPFormData {

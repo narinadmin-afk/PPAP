@@ -11,6 +11,7 @@
     "lint": "vite build"
   },
   "dependencies": {
+    "firebase": "^13.2.0",
     "jspdf": "^4.2.1",
     "jszip": "^3.10.2",
     "lucide-react": "^1.70.0",
