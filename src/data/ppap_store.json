@@ -1,0 +1,3741 @@
+{
+  "users": [
+    {
+      "id": "u-1",
+      "name": "Somchai Prasert (สมชาย ประเสริฐ)",
+      "email": "somchai.p@autoquality.com",
+      "role": "Quality Manager",
+      "department": "Quality Assurance",
+      "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80",
+      "signature": "Somchai Prasert (QA Mgr)"
+    },
+    {
+      "id": "u-2",
+      "name": "Nattaporn Chaiyasin (ณัฐพร ชัยสิน)",
+      "email": "nattaporn.c@autoquality.com",
+      "role": "Quality Engineer",
+      "department": "Quality Control",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80",
+      "signature": "Nattaporn C. (QE)"
+    },
+    {
+      "id": "u-3",
+      "name": "Kittisak Wongsuwan (กิตติศักดิ์ วงษ์สุวรรณ)",
+      "email": "kittisak.w@autoquality.com",
+      "role": "Production Engineer",
+      "department": "Manufacturing Eng",
+      "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&auto=format&fit=crop&q=80",
+      "signature": "Kittisak W. (PE)"
+    },
+    {
+      "id": "u-4",
+      "name": "Dr. Akira Tanaka (田中 晃)",
+      "email": "akira.tanaka@toyota-oem.com",
+      "role": "Administrator",
+      "department": "OEM Engineering & Systems",
+      "avatarUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&auto=format&fit=crop&q=80",
+      "signature": "A. Tanaka (Director)"
+    },
+    {
+      "id": "u-5",
+      "name": "Siriporn Rattanaporn (ศิริพร รัตนพร)",
+      "email": "siriporn.r@autoquality.com",
+      "role": "Inspector",
+      "department": "CMM & Metrology Lab",
+      "avatarUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&auto=format&fit=crop&q=80",
+      "signature": "Siriporn R. (Lead Inspector)"
+    },
+    {
+      "id": "u-6",
+      "name": "Chaiwat Boonsri (ชัยวัฒน์ บุญศรี)",
+      "email": "chaiwat.b@autoquality.com",
+      "role": "R&D Engineer",
+      "department": "Product Design",
+      "avatarUrl": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=120&auto=format&fit=crop&q=80",
+      "signature": "Chaiwat B. (R&D)"
+    }
+  ],
+  "projects": [
+    {
+      "partName": "Test",
+      "id": "p-1793895598616",
+      "createdAt": "2026-11-05T16:19:58.616Z",
+      "updatedAt": "2026-11-05T16:19:58.616Z",
+      "totalElements": 18,
+      "completedElements": 0,
+      "elements": [
+        {
+          "id": 1,
+          "name": "Design Records",
+          "description": "A copy of the engineering drawing or CAD model. If customer is design-responsible, this is customer drawing; if supplier is design-responsible, this is supplier released drawing.",
+          "shortCode": "DR",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Engineering Change Documents",
+          "description": "Approved engineering change documents (ECN/ECO) not yet recorded in the design record but incorporated into the part or tooling.",
+          "shortCode": "ECD",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Customer Engineering Approval",
+          "description": "Evidence of customer engineering department approval where required by the customer.",
+          "shortCode": "CEA",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Design FMEA (DFMEA)",
+          "description": "Design Failure Mode and Effects Analysis if the supplier is design-responsible.",
+          "shortCode": "DFMEA",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "Process Flow Diagram",
+          "description": "Diagram clearly depicting the manufacturing process steps and sequence from receiving through shipping.",
+          "shortCode": "PFD",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Process FMEA (PFMEA)",
+          "description": "Process Failure Mode and Effects Analysis compliant with AIAG & VDA methodology evaluating potential product quality risks in production.",
+          "shortCode": "PFMEA",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "Control Plan",
+          "description": "Pre-launch and production control plan defining all special characteristics, controls, inspection frequencies, sample sizes, and reaction plans.",
+          "shortCode": "CP",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "name": "Measurement System Analysis (MSA)",
+          "description": "Applicable MSA studies (e.g. Gage R&R, Bias, Linearity, Stability) for all equipment referenced in the Control Plan.",
+          "shortCode": "MSA",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "name": "Dimensional Results",
+          "description": "Evidence that dimensional verifications have been completed and results indicate compliance with all specified requirements on ballooned drawings.",
+          "shortCode": "DIM",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "name": "Material, Performance Test Results",
+          "description": "Records of material tests (tensile, chemical, hardness, salt spray, flammability) and functional performance test results according to OEM specifications.",
+          "shortCode": "MPTR",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "name": "Initial Process Studies",
+          "description": "Short-term statistical process capability index (Ppk >= 1.67) for all customer-designated special and safety characteristics.",
+          "shortCode": "IPS",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "name": "Qualified Laboratory Documentation",
+          "description": "Laboratory scope and accreditation evidence (e.g. ISO/IEC 17025) for internal or external commercial testing laboratories.",
+          "shortCode": "QLD",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "name": "Appearance Approval Report (AAR)",
+          "description": "Completed Appearance Approval Report for parts with color, grain, gloss, or visual surface criteria designated by customer.",
+          "shortCode": "AAR",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "S",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "name": "Sample Production Parts",
+          "description": "Sample parts taken from significant production run (min 300 pieces or 1-8 hour run) provided per customer instructions.",
+          "shortCode": "SPP",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "name": "Master Sample",
+          "description": "Retained master sample parts identified and preserved at supplier facility for the same period as the production part approval records.",
+          "shortCode": "MS",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "R",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "name": "Checking Aids",
+          "description": "Certification, dimensional calibration report, and Gage R&R for part-specific inspection fixtures, checking aids, templates, and gages.",
+          "shortCode": "CA",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "R",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "name": "Customer-Specific Requirements",
+          "description": "Records of compliance to customer-specific requirements (e.g. IMDS certification, CQI assessments, OEM packaging approval).",
+          "shortCode": "CSR",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "name": "Part Submission Warrant (PSW)",
+          "description": "The mandatory declaration document summarizing the submission level, reason, verification checklist, supplier declaration, and OEM sign-off.",
+          "shortCode": "PSW",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "S",
+            "2": "S",
+            "3": "S",
+            "4": "S",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:19:58.616Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p-1",
+      "projectNumber": "PPAP-2026-001",
+      "customerName": "Toyota Motor Thailand Co., Ltd.",
+      "supplierName": "Apex Automotive Precision Parts Ltd.",
+      "partName": "Engine Mounting Support Bracket LH",
+      "partNumber": "51201-0K150-C",
+      "drawingNumber": "DWG-51201-REV-04",
+      "engineeringChangeLevel": "ECL-04 (High Tensile Steel Upgrade)",
+      "manufacturingLocation": "Samut Prakan Plant 2, Line B",
+      "submissionLevel": 3,
+      "submissionReason": "Engineering Change(s)",
+      "submissionDate": "2026-11-20",
+      "responsibleEngineer": "Nattaporn Chaiyasin (Quality Engineer)",
+      "status": "Pending Review",
+      "createdAt": "2026-10-06T16:17:26.987Z",
+      "updatedAt": "2026-11-05T16:17:26.987Z",
+      "totalElements": 18,
+      "completedElements": 16,
+      "elements": [
+        {
+          "id": 1,
+          "name": "Design Records",
+          "description": "A copy of the engineering drawing or CAD model. If customer is design-responsible, this is customer drawing; if supplier is design-responsible, this is supplier released drawing.",
+          "shortCode": "DR",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.986Z",
+          "attachments": [
+            {
+              "id": "att-p-1-1",
+              "fileName": "DR_51201-0K150-C_Rev A.pdf",
+              "fileSize": 230400,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-10-19T16:17:26.987Z",
+              "url": "/uploads/DR_51201-0K150-C.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 2,
+          "name": "Engineering Change Documents",
+          "description": "Approved engineering change documents (ECN/ECO) not yet recorded in the design record but incorporated into the part or tooling.",
+          "shortCode": "ECD",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.986Z",
+          "attachments": [
+            {
+              "id": "att-p-1-2",
+              "fileName": "ECD_51201-0K150-C_Rev A.pdf",
+              "fileSize": 276480,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-10-20T16:17:26.987Z",
+              "url": "/uploads/ECD_51201-0K150-C.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 3,
+          "name": "Customer Engineering Approval",
+          "description": "Evidence of customer engineering department approval where required by the customer.",
+          "shortCode": "CEA",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.986Z",
+          "attachments": [
+            {
+              "id": "att-p-1-3",
+              "fileName": "CEA_51201-0K150-C_Rev A.pdf",
+              "fileSize": 322560,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-10-21T16:17:26.987Z",
+              "url": "/uploads/CEA_51201-0K150-C.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 4,
+          "name": "Design FMEA (DFMEA)",
+          "description": "Design Failure Mode and Effects Analysis if the supplier is design-responsible.",
+          "shortCode": "DFMEA",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.986Z",
+          "attachments": [
+            {
+              "id": "att-p-1-4",
+              "fileName": "DFMEA_51201-0K150-C_Rev A.pdf",
+              "fileSize": 368640,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-10-22T16:17:26.987Z",
+              "url": "/uploads/DFMEA_51201-0K150-C.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 5,
+          "name": "Process Flow Diagram",
+          "description": "Diagram clearly depicting the manufacturing process steps and sequence from receiving through shipping.",
+          "shortCode": "PFD",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.986Z",
+          "attachments": [
+            {
+              "id": "att-p-1-5",
+              "fileName": "PFD_51201-0K150-C_Rev A.pdf",
+              "fileSize": 414720,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-10-23T16:17:26.987Z",
+              "url": "/uploads/PFD_51201-0K150-C.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 6,
+          "name": "Process FMEA (PFMEA)",
+          "description": "Process Failure Mode and Effects Analysis compliant with AIAG & VDA methodology evaluating potential product quality risks in production.",
+          "shortCode": "PFMEA",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-1-6",
+              "fileName": "PFMEA_51201-0K150-C_Rev A.pdf",
+              "fileSize": 460800,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-10-24T16:17:26.987Z",
+              "url": "/uploads/PFMEA_51201-0K150-C.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 7,
+          "name": "Control Plan",
+          "description": "Pre-launch and production control plan defining all special characteristics, controls, inspection frequencies, sample sizes, and reaction plans.",
+          "shortCode": "CP",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-1-7",
+              "fileName": "CP_51201-0K150-C_Rev A.pdf",
+              "fileSize": 506880,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-10-25T16:17:26.987Z",
+              "url": "/uploads/CP_51201-0K150-C.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 8,
+          "name": "Measurement System Analysis (MSA)",
+          "description": "Applicable MSA studies (e.g. Gage R&R, Bias, Linearity, Stability) for all equipment referenced in the Control Plan.",
+          "shortCode": "MSA",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-1-8",
+              "fileName": "MSA_51201-0K150-C_Rev A.pdf",
+              "fileSize": 552960,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-10-26T16:17:26.987Z",
+              "url": "/uploads/MSA_51201-0K150-C.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 9,
+          "name": "Dimensional Results",
+          "description": "Evidence that dimensional verifications have been completed and results indicate compliance with all specified requirements on ballooned drawings.",
+          "shortCode": "DIM",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-1-9",
+              "fileName": "DIM_51201-0K150-C_Rev A.pdf",
+              "fileSize": 599040,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-10-27T16:17:26.987Z",
+              "url": "/uploads/DIM_51201-0K150-C.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 10,
+          "name": "Material, Performance Test Results",
+          "description": "Records of material tests (tensile, chemical, hardness, salt spray, flammability) and functional performance test results according to OEM specifications.",
+          "shortCode": "MPTR",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-1-10",
+              "fileName": "MPTR_51201-0K150-C_Rev A.pdf",
+              "fileSize": 645120,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-10-28T16:17:26.987Z",
+              "url": "/uploads/MPTR_51201-0K150-C.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 11,
+          "name": "Initial Process Studies",
+          "description": "Short-term statistical process capability index (Ppk >= 1.67) for all customer-designated special and safety characteristics.",
+          "shortCode": "IPS",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-1-11",
+              "fileName": "IPS_51201-0K150-C_Rev A.pdf",
+              "fileSize": 691200,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-10-29T16:17:26.987Z",
+              "url": "/uploads/IPS_51201-0K150-C.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 12,
+          "name": "Qualified Laboratory Documentation",
+          "description": "Laboratory scope and accreditation evidence (e.g. ISO/IEC 17025) for internal or external commercial testing laboratories.",
+          "shortCode": "QLD",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-1-12",
+              "fileName": "QLD_51201-0K150-C_Rev A.pdf",
+              "fileSize": 737280,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-10-30T16:17:26.987Z",
+              "url": "/uploads/QLD_51201-0K150-C.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 13,
+          "name": "Appearance Approval Report (AAR)",
+          "description": "Completed Appearance Approval Report for parts with color, grain, gloss, or visual surface criteria designated by customer.",
+          "shortCode": "AAR",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "S",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-1-13",
+              "fileName": "AAR_51201-0K150-C_Rev A.pdf",
+              "fileSize": 783360,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-10-31T16:17:26.987Z",
+              "url": "/uploads/AAR_51201-0K150-C.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 14,
+          "name": "Sample Production Parts",
+          "description": "Sample parts taken from significant production run (min 300 pieces or 1-8 hour run) provided per customer instructions.",
+          "shortCode": "SPP",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-1-14",
+              "fileName": "SPP_51201-0K150-C_Rev A.pdf",
+              "fileSize": 829440,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-11-01T16:17:26.987Z",
+              "url": "/uploads/SPP_51201-0K150-C.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 15,
+          "name": "Master Sample",
+          "description": "Retained master sample parts identified and preserved at supplier facility for the same period as the production part approval records.",
+          "shortCode": "MS",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "R",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-1-15",
+              "fileName": "MS_51201-0K150-C_Rev A.pdf",
+              "fileSize": 875520,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-11-02T16:17:26.987Z",
+              "url": "/uploads/MS_51201-0K150-C.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 16,
+          "name": "Checking Aids",
+          "description": "Certification, dimensional calibration report, and Gage R&R for part-specific inspection fixtures, checking aids, templates, and gages.",
+          "shortCode": "CA",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "R",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-1-16",
+              "fileName": "CA_51201-0K150-C_Rev A.pdf",
+              "fileSize": 921600,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-11-03T16:17:26.987Z",
+              "url": "/uploads/CA_51201-0K150-C.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 17,
+          "name": "Customer-Specific Requirements",
+          "description": "Records of compliance to customer-specific requirements (e.g. IMDS certification, CQI assessments, OEM packaging approval).",
+          "shortCode": "CSR",
+          "status": "Pending Review",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-1-17",
+              "fileName": "CSR_51201-0K150-C_Rev A.pdf",
+              "fileSize": 967680,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-11-04T16:17:26.987Z",
+              "url": "/uploads/CSR_51201-0K150-C.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "name": "Part Submission Warrant (PSW)",
+          "description": "The mandatory declaration document summarizing the submission level, reason, verification checklist, supplier declaration, and OEM sign-off.",
+          "shortCode": "PSW",
+          "status": "Pending Review",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "S",
+            "2": "S",
+            "3": "S",
+            "4": "S",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-1-18",
+              "fileName": "PSW_51201-0K150-C_Rev 0.pdf",
+              "fileSize": 1013760,
+              "fileType": "application/pdf",
+              "uploadedBy": "Nattaporn Chaiyasin (Quality Engineer)",
+              "uploadedAt": "2026-11-05T16:17:26.987Z",
+              "url": "/uploads/PSW_51201-0K150-C.pdf",
+              "revision": "Rev 0"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p-2",
+      "projectNumber": "PPAP-2026-002",
+      "customerName": "Honda Automobile (Thailand) Co., Ltd.",
+      "supplierName": "Apex Automotive Precision Parts Ltd.",
+      "partName": "Front Suspension Subframe Reinforcement Lower",
+      "partNumber": "74111-T5A-000",
+      "drawingNumber": "HD-74111-T5A",
+      "engineeringChangeLevel": "Rev C",
+      "manufacturingLocation": "Ayutthaya Industrial Estate, Unit 4",
+      "submissionLevel": 3,
+      "submissionReason": "Initial Submission",
+      "submissionDate": "2026-12-05",
+      "responsibleEngineer": "Kittisak Wongsuwan (Production Engineer)",
+      "status": "In Progress",
+      "createdAt": "2026-10-06T16:17:26.987Z",
+      "updatedAt": "2026-11-05T16:17:26.987Z",
+      "totalElements": 18,
+      "completedElements": 7,
+      "elements": [
+        {
+          "id": 1,
+          "name": "Design Records",
+          "description": "A copy of the engineering drawing or CAD model. If customer is design-responsible, this is customer drawing; if supplier is design-responsible, this is supplier released drawing.",
+          "shortCode": "DR",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Engineering Change Documents",
+          "description": "Approved engineering change documents (ECN/ECO) not yet recorded in the design record but incorporated into the part or tooling.",
+          "shortCode": "ECD",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Customer Engineering Approval",
+          "description": "Evidence of customer engineering department approval where required by the customer.",
+          "shortCode": "CEA",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Design FMEA (DFMEA)",
+          "description": "Design Failure Mode and Effects Analysis if the supplier is design-responsible.",
+          "shortCode": "DFMEA",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "Process Flow Diagram",
+          "description": "Diagram clearly depicting the manufacturing process steps and sequence from receiving through shipping.",
+          "shortCode": "PFD",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Process FMEA (PFMEA)",
+          "description": "Process Failure Mode and Effects Analysis compliant with AIAG & VDA methodology evaluating potential product quality risks in production.",
+          "shortCode": "PFMEA",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "Control Plan",
+          "description": "Pre-launch and production control plan defining all special characteristics, controls, inspection frequencies, sample sizes, and reaction plans.",
+          "shortCode": "CP",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "name": "Measurement System Analysis (MSA)",
+          "description": "Applicable MSA studies (e.g. Gage R&R, Bias, Linearity, Stability) for all equipment referenced in the Control Plan.",
+          "shortCode": "MSA",
+          "status": "In Progress",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "name": "Dimensional Results",
+          "description": "Evidence that dimensional verifications have been completed and results indicate compliance with all specified requirements on ballooned drawings.",
+          "shortCode": "DIM",
+          "status": "In Progress",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "name": "Material, Performance Test Results",
+          "description": "Records of material tests (tensile, chemical, hardness, salt spray, flammability) and functional performance test results according to OEM specifications.",
+          "shortCode": "MPTR",
+          "status": "In Progress",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "name": "Initial Process Studies",
+          "description": "Short-term statistical process capability index (Ppk >= 1.67) for all customer-designated special and safety characteristics.",
+          "shortCode": "IPS",
+          "status": "In Progress",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "name": "Qualified Laboratory Documentation",
+          "description": "Laboratory scope and accreditation evidence (e.g. ISO/IEC 17025) for internal or external commercial testing laboratories.",
+          "shortCode": "QLD",
+          "status": "In Progress",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "name": "Appearance Approval Report (AAR)",
+          "description": "Completed Appearance Approval Report for parts with color, grain, gloss, or visual surface criteria designated by customer.",
+          "shortCode": "AAR",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "S",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "name": "Sample Production Parts",
+          "description": "Sample parts taken from significant production run (min 300 pieces or 1-8 hour run) provided per customer instructions.",
+          "shortCode": "SPP",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "name": "Master Sample",
+          "description": "Retained master sample parts identified and preserved at supplier facility for the same period as the production part approval records.",
+          "shortCode": "MS",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "R",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "name": "Checking Aids",
+          "description": "Certification, dimensional calibration report, and Gage R&R for part-specific inspection fixtures, checking aids, templates, and gages.",
+          "shortCode": "CA",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "R",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "name": "Customer-Specific Requirements",
+          "description": "Records of compliance to customer-specific requirements (e.g. IMDS certification, CQI assessments, OEM packaging approval).",
+          "shortCode": "CSR",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "name": "Part Submission Warrant (PSW)",
+          "description": "The mandatory declaration document summarizing the submission level, reason, verification checklist, supplier declaration, and OEM sign-off.",
+          "shortCode": "PSW",
+          "status": "Not Started",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "S",
+            "2": "S",
+            "3": "S",
+            "4": "S",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p-3",
+      "projectNumber": "PPAP-2026-003",
+      "customerName": "AutoAlliance (Thailand) Co., Ltd. (Ford / Mazda)",
+      "supplierName": "Apex Automotive Precision Parts Ltd.",
+      "partName": "Instrument Panel Center Bezel Housing",
+      "partNumber": "JB3B-15043-AA",
+      "drawingNumber": "FRD-JB3B-15043",
+      "engineeringChangeLevel": "ECN-2026-88",
+      "manufacturingLocation": "Rayong Eastern Seaboard Line 1",
+      "submissionLevel": 2,
+      "submissionReason": "Tooling: Transfer, Replacement, Refurbishment",
+      "submissionDate": "2026-10-15",
+      "responsibleEngineer": "Chaiwat Boonsri (R&D Engineer)",
+      "status": "Approved",
+      "createdAt": "2026-10-06T16:17:26.987Z",
+      "updatedAt": "2026-11-05T16:17:26.987Z",
+      "totalElements": 18,
+      "completedElements": 18,
+      "elements": [
+        {
+          "id": 1,
+          "name": "Design Records",
+          "description": "A copy of the engineering drawing or CAD model. If customer is design-responsible, this is customer drawing; if supplier is design-responsible, this is supplier released drawing.",
+          "shortCode": "DR",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-1",
+              "fileName": "DR_JB3B-15043-AA_Rev A.pdf",
+              "fileSize": 230400,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-10-19T16:17:26.987Z",
+              "url": "/uploads/DR_JB3B-15043-AA.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 2,
+          "name": "Engineering Change Documents",
+          "description": "Approved engineering change documents (ECN/ECO) not yet recorded in the design record but incorporated into the part or tooling.",
+          "shortCode": "ECD",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-2",
+              "fileName": "ECD_JB3B-15043-AA_Rev A.pdf",
+              "fileSize": 276480,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-10-20T16:17:26.987Z",
+              "url": "/uploads/ECD_JB3B-15043-AA.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 3,
+          "name": "Customer Engineering Approval",
+          "description": "Evidence of customer engineering department approval where required by the customer.",
+          "shortCode": "CEA",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-3",
+              "fileName": "CEA_JB3B-15043-AA_Rev A.pdf",
+              "fileSize": 322560,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-10-21T16:17:26.987Z",
+              "url": "/uploads/CEA_JB3B-15043-AA.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 4,
+          "name": "Design FMEA (DFMEA)",
+          "description": "Design Failure Mode and Effects Analysis if the supplier is design-responsible.",
+          "shortCode": "DFMEA",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-4",
+              "fileName": "DFMEA_JB3B-15043-AA_Rev A.pdf",
+              "fileSize": 368640,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-10-22T16:17:26.987Z",
+              "url": "/uploads/DFMEA_JB3B-15043-AA.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 5,
+          "name": "Process Flow Diagram",
+          "description": "Diagram clearly depicting the manufacturing process steps and sequence from receiving through shipping.",
+          "shortCode": "PFD",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-5",
+              "fileName": "PFD_JB3B-15043-AA_Rev A.pdf",
+              "fileSize": 414720,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-10-23T16:17:26.987Z",
+              "url": "/uploads/PFD_JB3B-15043-AA.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 6,
+          "name": "Process FMEA (PFMEA)",
+          "description": "Process Failure Mode and Effects Analysis compliant with AIAG & VDA methodology evaluating potential product quality risks in production.",
+          "shortCode": "PFMEA",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-6",
+              "fileName": "PFMEA_JB3B-15043-AA_Rev A.pdf",
+              "fileSize": 460800,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-10-24T16:17:26.987Z",
+              "url": "/uploads/PFMEA_JB3B-15043-AA.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 7,
+          "name": "Control Plan",
+          "description": "Pre-launch and production control plan defining all special characteristics, controls, inspection frequencies, sample sizes, and reaction plans.",
+          "shortCode": "CP",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-7",
+              "fileName": "CP_JB3B-15043-AA_Rev A.pdf",
+              "fileSize": 506880,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-10-25T16:17:26.987Z",
+              "url": "/uploads/CP_JB3B-15043-AA.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 8,
+          "name": "Measurement System Analysis (MSA)",
+          "description": "Applicable MSA studies (e.g. Gage R&R, Bias, Linearity, Stability) for all equipment referenced in the Control Plan.",
+          "shortCode": "MSA",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-8",
+              "fileName": "MSA_JB3B-15043-AA_Rev A.pdf",
+              "fileSize": 552960,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-10-26T16:17:26.987Z",
+              "url": "/uploads/MSA_JB3B-15043-AA.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 9,
+          "name": "Dimensional Results",
+          "description": "Evidence that dimensional verifications have been completed and results indicate compliance with all specified requirements on ballooned drawings.",
+          "shortCode": "DIM",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-9",
+              "fileName": "DIM_JB3B-15043-AA_Rev A.pdf",
+              "fileSize": 599040,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-10-27T16:17:26.987Z",
+              "url": "/uploads/DIM_JB3B-15043-AA.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 10,
+          "name": "Material, Performance Test Results",
+          "description": "Records of material tests (tensile, chemical, hardness, salt spray, flammability) and functional performance test results according to OEM specifications.",
+          "shortCode": "MPTR",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-10",
+              "fileName": "MPTR_JB3B-15043-AA_Rev A.pdf",
+              "fileSize": 645120,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-10-28T16:17:26.987Z",
+              "url": "/uploads/MPTR_JB3B-15043-AA.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 11,
+          "name": "Initial Process Studies",
+          "description": "Short-term statistical process capability index (Ppk >= 1.67) for all customer-designated special and safety characteristics.",
+          "shortCode": "IPS",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-11",
+              "fileName": "IPS_JB3B-15043-AA_Rev A.pdf",
+              "fileSize": 691200,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-10-29T16:17:26.987Z",
+              "url": "/uploads/IPS_JB3B-15043-AA.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 12,
+          "name": "Qualified Laboratory Documentation",
+          "description": "Laboratory scope and accreditation evidence (e.g. ISO/IEC 17025) for internal or external commercial testing laboratories.",
+          "shortCode": "QLD",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-12",
+              "fileName": "QLD_JB3B-15043-AA_Rev A.pdf",
+              "fileSize": 737280,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-10-30T16:17:26.987Z",
+              "url": "/uploads/QLD_JB3B-15043-AA.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 13,
+          "name": "Appearance Approval Report (AAR)",
+          "description": "Completed Appearance Approval Report for parts with color, grain, gloss, or visual surface criteria designated by customer.",
+          "shortCode": "AAR",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "S",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-13",
+              "fileName": "AAR_JB3B-15043-AA_Rev A.pdf",
+              "fileSize": 783360,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-10-31T16:17:26.987Z",
+              "url": "/uploads/AAR_JB3B-15043-AA.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 14,
+          "name": "Sample Production Parts",
+          "description": "Sample parts taken from significant production run (min 300 pieces or 1-8 hour run) provided per customer instructions.",
+          "shortCode": "SPP",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-14",
+              "fileName": "SPP_JB3B-15043-AA_Rev A.pdf",
+              "fileSize": 829440,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-11-01T16:17:26.987Z",
+              "url": "/uploads/SPP_JB3B-15043-AA.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 15,
+          "name": "Master Sample",
+          "description": "Retained master sample parts identified and preserved at supplier facility for the same period as the production part approval records.",
+          "shortCode": "MS",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "R",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-15",
+              "fileName": "MS_JB3B-15043-AA_Rev A.pdf",
+              "fileSize": 875520,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-11-02T16:17:26.987Z",
+              "url": "/uploads/MS_JB3B-15043-AA.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 16,
+          "name": "Checking Aids",
+          "description": "Certification, dimensional calibration report, and Gage R&R for part-specific inspection fixtures, checking aids, templates, and gages.",
+          "shortCode": "CA",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "R",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-16",
+              "fileName": "CA_JB3B-15043-AA_Rev A.pdf",
+              "fileSize": 921600,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-11-03T16:17:26.987Z",
+              "url": "/uploads/CA_JB3B-15043-AA.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "approvedBy": "Somchai Prasert (Quality Manager)",
+          "reviewedBy": "Nattaporn Chaiyasin (Quality Engineer)"
+        },
+        {
+          "id": 17,
+          "name": "Customer-Specific Requirements",
+          "description": "Records of compliance to customer-specific requirements (e.g. IMDS certification, CQI assessments, OEM packaging approval).",
+          "shortCode": "CSR",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-17",
+              "fileName": "CSR_JB3B-15043-AA_Rev A.pdf",
+              "fileSize": 967680,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-11-04T16:17:26.987Z",
+              "url": "/uploads/CSR_JB3B-15043-AA.pdf",
+              "revision": "Rev A"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "name": "Part Submission Warrant (PSW)",
+          "description": "The mandatory declaration document summarizing the submission level, reason, verification checklist, supplier declaration, and OEM sign-off.",
+          "shortCode": "PSW",
+          "status": "Approved",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "S",
+            "2": "S",
+            "3": "S",
+            "4": "S",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [
+            {
+              "id": "att-p-3-18",
+              "fileName": "PSW_JB3B-15043-AA_Rev 0.pdf",
+              "fileSize": 1013760,
+              "fileType": "application/pdf",
+              "uploadedBy": "Chaiwat Boonsri (R&D Engineer)",
+              "uploadedAt": "2026-11-05T16:17:26.987Z",
+              "url": "/uploads/PSW_JB3B-15043-AA.pdf",
+              "revision": "Rev 0"
+            }
+          ],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "p-4",
+      "projectNumber": "PPAP-2026-004",
+      "customerName": "Isuzu Motors Co., (Thailand) Ltd.",
+      "supplierName": "Apex Automotive Precision Parts Ltd.",
+      "partName": "Common Rail High-Pressure Fuel Pipe Clamp",
+      "partNumber": "8-98012345-0",
+      "drawingNumber": "ISZ-898012",
+      "engineeringChangeLevel": "Level 2.1",
+      "manufacturingLocation": "Gateway City Chachoengsao",
+      "submissionLevel": 4,
+      "submissionReason": "Change in Part Processing",
+      "submissionDate": "2026-11-28",
+      "responsibleEngineer": "Nattaporn Chaiyasin (Quality Engineer)",
+      "status": "Rejected",
+      "createdAt": "2026-10-06T16:17:26.988Z",
+      "updatedAt": "2026-11-05T16:17:26.988Z",
+      "totalElements": 18,
+      "completedElements": 10,
+      "elements": [
+        {
+          "id": 1,
+          "name": "Design Records",
+          "description": "A copy of the engineering drawing or CAD model. If customer is design-responsible, this is customer drawing; if supplier is design-responsible, this is supplier released drawing.",
+          "shortCode": "DR",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Engineering Change Documents",
+          "description": "Approved engineering change documents (ECN/ECO) not yet recorded in the design record but incorporated into the part or tooling.",
+          "shortCode": "ECD",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Customer Engineering Approval",
+          "description": "Evidence of customer engineering department approval where required by the customer.",
+          "shortCode": "CEA",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "Design FMEA (DFMEA)",
+          "description": "Design Failure Mode and Effects Analysis if the supplier is design-responsible.",
+          "shortCode": "DFMEA",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "Process Flow Diagram",
+          "description": "Diagram clearly depicting the manufacturing process steps and sequence from receiving through shipping.",
+          "shortCode": "PFD",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "Process FMEA (PFMEA)",
+          "description": "Process Failure Mode and Effects Analysis compliant with AIAG & VDA methodology evaluating potential product quality risks in production.",
+          "shortCode": "PFMEA",
+          "status": "Rejected",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "comments": "PFMEA S/O/D ratings under-evaluated. Occurrence must be revised due to past stamping tooling wear data."
+        },
+        {
+          "id": 7,
+          "name": "Control Plan",
+          "description": "Pre-launch and production control plan defining all special characteristics, controls, inspection frequencies, sample sizes, and reaction plans.",
+          "shortCode": "CP",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "name": "Measurement System Analysis (MSA)",
+          "description": "Applicable MSA studies (e.g. Gage R&R, Bias, Linearity, Stability) for all equipment referenced in the Control Plan.",
+          "shortCode": "MSA",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "name": "Dimensional Results",
+          "description": "Evidence that dimensional verifications have been completed and results indicate compliance with all specified requirements on ballooned drawings.",
+          "shortCode": "DIM",
+          "status": "Rejected",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ],
+          "comments": "CMM inspection points 4 & 7 show Ppk < 1.33. Corrective action plan required before resubmission."
+        },
+        {
+          "id": 10,
+          "name": "Material, Performance Test Results",
+          "description": "Records of material tests (tensile, chemical, hardness, salt spray, flammability) and functional performance test results according to OEM specifications.",
+          "shortCode": "MPTR",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "name": "Initial Process Studies",
+          "description": "Short-term statistical process capability index (Ppk >= 1.67) for all customer-designated special and safety characteristics.",
+          "shortCode": "IPS",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "name": "Qualified Laboratory Documentation",
+          "description": "Laboratory scope and accreditation evidence (e.g. ISO/IEC 17025) for internal or external commercial testing laboratories.",
+          "shortCode": "QLD",
+          "status": "Approved",
+          "currentRevision": "Rev A",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "name": "Appearance Approval Report (AAR)",
+          "description": "Completed Appearance Approval Report for parts with color, grain, gloss, or visual surface criteria designated by customer.",
+          "shortCode": "AAR",
+          "status": "In Progress",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "S",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "name": "Sample Production Parts",
+          "description": "Sample parts taken from significant production run (min 300 pieces or 1-8 hour run) provided per customer instructions.",
+          "shortCode": "SPP",
+          "status": "In Progress",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "S",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "name": "Master Sample",
+          "description": "Retained master sample parts identified and preserved at supplier facility for the same period as the production part approval records.",
+          "shortCode": "MS",
+          "status": "In Progress",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "R",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 16,
+          "name": "Checking Aids",
+          "description": "Certification, dimensional calibration report, and Gage R&R for part-specific inspection fixtures, checking aids, templates, and gages.",
+          "shortCode": "CA",
+          "status": "In Progress",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "R",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "name": "Customer-Specific Requirements",
+          "description": "Records of compliance to customer-specific requirements (e.g. IMDS certification, CQI assessments, OEM packaging approval).",
+          "shortCode": "CSR",
+          "status": "In Progress",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "R",
+            "2": "R",
+            "3": "S",
+            "4": "*",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        },
+        {
+          "id": 18,
+          "name": "Part Submission Warrant (PSW)",
+          "description": "The mandatory declaration document summarizing the submission level, reason, verification checklist, supplier declaration, and OEM sign-off.",
+          "shortCode": "PSW",
+          "status": "In Progress",
+          "currentRevision": "Rev 0",
+          "isApplicable": true,
+          "requiredForLevel": {
+            "1": "S",
+            "2": "S",
+            "3": "S",
+            "4": "S",
+            "5": "R"
+          },
+          "updatedAt": "2026-11-05T16:17:26.987Z",
+          "attachments": [],
+          "revisions": [
+            {
+              "revision": "Rev 0",
+              "changeDescription": "Initial document draft placeholder",
+              "preparedBy": "Quality Engineer",
+              "date": "2026-11-05",
+              "status": "Not Started"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "pfmeas": {
+    "p-1": [
+      {
+        "id": "pf-101",
+        "processStep": "OP 10: Blanking & Piercing",
+        "processFunction": "Cut high-strength steel sheet (SPFC 590) to blank shape and punch locating pilot holes",
+        "failureMode": "Burr height exceeds limit (> 0.08 mm)",
+        "failureEffect": "Poor seating in subsequent forming die; potential crack at bend radius",
+        "failureCause": "Punch/die clearance worn or incorrect punch sharpness",
+        "preventionControl": "Tooling preventive maintenance every 25,000 strokes; carbide punch inserts",
+        "detectionControl": "Optical profile projector inspection 5 pcs per 2 hours",
+        "severity": 7,
+        "occurrence": 3,
+        "detection": 3,
+        "actionPriority": "Medium",
+        "recommendedAction": "Install automated acoustic die wear acoustic sensor monitor",
+        "responsibility": "Kittisak W. (PE)",
+        "targetCompletionDate": "2026-11-15",
+        "status": "In Progress"
+      },
+      {
+        "id": "pf-102",
+        "processStep": "OP 20: Progressive Stamping & Forming",
+        "processFunction": "Draw and form 90-degree bracket flange ribs to required CAD geometry",
+        "failureMode": "Flange spring-back angle out of tolerance (89.0° vs 90.0° ± 0.5°)",
+        "failureEffect": "Assembly interference during chassis bracket robot bolting at OEM line",
+        "failureCause": "Yield strength variation in raw coil lot; cushion nitrogen pressure decay",
+        "preventionControl": "Coil tensile cert verification per batch; nitrogen pressure transducer interlock",
+        "detectionControl": "Dedicated check fixture with dial indicator 100% go/no-go pin",
+        "severity": 8,
+        "occurrence": 4,
+        "detection": 2,
+        "actionPriority": "Medium",
+        "recommendedAction": "Implement automated servo cushion closed-loop pressure feedback",
+        "responsibility": "Kittisak W. (PE)",
+        "targetCompletionDate": "2026-11-18",
+        "status": "In Progress"
+      },
+      {
+        "id": "pf-103",
+        "processStep": "OP 30: Robotic MIG Welding of Nut Plate",
+        "processFunction": "Join M10 weld nuts to reinforcement bracket with structural weld penetration",
+        "failureMode": "Incomplete weld penetration or spatter inside thread",
+        "failureEffect": "Weld nut detachment under 45 kN crash load test or thread jamming",
+        "failureCause": "Welding wire tip positioning error; shielding gas flow rate drop below 15 L/min",
+        "preventionControl": "Automated wire nozzle cleaner after every 15 cycles; gas flow digital interlock",
+        "detectionControl": "Push-out torque proof test (60 Nm) 3 pcs/shift + destructive cut macro once/day",
+        "severity": 9,
+        "occurrence": 2,
+        "detection": 3,
+        "actionPriority": "Medium",
+        "recommendedAction": "Add digital camera vision inspection for thread spatter detection",
+        "responsibility": "Somchai P. (QA)",
+        "targetCompletionDate": "2026-11-25",
+        "status": "Completed"
+      },
+      {
+        "id": "pf-104",
+        "processStep": "OP 40: Cathodic Electro-Deposition (E-Coat)",
+        "processFunction": "Apply anti-corrosion black coating (film thickness 15 - 25 μm)",
+        "failureMode": "Film thickness below 15 μm or orange peel pinholes",
+        "failureEffect": "Premature rust failure before 720h salt spray requirement (TSH6528G)",
+        "failureCause": "Paint bath conductivity out of range; ultrafiltration rinse flow low",
+        "preventionControl": "Automated bath titration replenishment & pH dosing system",
+        "detectionControl": "Electromagnetic coating thickness gage 5 pcs per rack; daily salt spray coupon",
+        "severity": 7,
+        "occurrence": 2,
+        "detection": 2,
+        "actionPriority": "Medium",
+        "recommendedAction": "Maintain daily bath log and calibrate probe weekly",
+        "responsibility": "Nattaporn C. (QE)",
+        "targetCompletionDate": "2026-11-10",
+        "status": "Completed"
+      }
+    ],
+    "p-1793895598616": []
+  },
+  "processFlows": {
+    "p-1": [
+      {
+        "id": "st-10",
+        "stepNumber": "10",
+        "stepName": "Raw Material Receiving & Inspection",
+        "type": "storage",
+        "machine": "Steel Coil Receiving Bay",
+        "description": "Receive SPFC 590 high-strength steel coil, check Mill Test Certificate (MTC), verify thickness & hardness.",
+        "keyParameters": "Thickness 2.50 ± 0.05 mm, Tensile > 590 MPa",
+        "inspectionMethod": "Micrometer + Portable Hardness Tester",
+        "x": 100,
+        "y": 60
+      },
+      {
+        "id": "st-20",
+        "stepNumber": "20",
+        "stepName": "Blanking & Piercing (OP 10)",
+        "type": "operation",
+        "machine": "AIDA 300T Mechanical Press",
+        "description": "Blank outer contour and pierce 4 datum locating holes.",
+        "keyParameters": "Stroke speed 35 SPM, Die shut height 450 mm",
+        "inspectionMethod": "Check Fixture CF-51201-1",
+        "x": 100,
+        "y": 180
+      },
+      {
+        "id": "st-30",
+        "stepNumber": "30",
+        "stepName": "Forming & Flanging (OP 20)",
+        "type": "operation",
+        "machine": "Komatsu 400T Link Motion Press",
+        "description": "Draw 3D stiffener bead and form 90-degree mounting flanges.",
+        "keyParameters": "Forming tonnage 320T, Nitrogen cushion pressure 140 bar",
+        "inspectionMethod": "Dial indicator fixture & visual",
+        "x": 100,
+        "y": 300
+      },
+      {
+        "id": "st-40",
+        "stepNumber": "40",
+        "stepName": "In-Process Dimension Inspection",
+        "type": "inspection",
+        "machine": "Quality Inspection Station 1",
+        "description": "Verify 6 critical hole-to-hole center distances and flange angle.",
+        "keyParameters": "Hole pitch 140.0 ± 0.2 mm, Angle 90.0° ± 0.5°",
+        "inspectionMethod": "CMM Mitutoyo Crysta-Apex / Check Fixture",
+        "x": 100,
+        "y": 420
+      },
+      {
+        "id": "st-50",
+        "stepNumber": "50",
+        "stepName": "Robotic Nut Welding (OP 30)",
+        "type": "operation",
+        "machine": "Yaskawa Motoman 6-Axis Robotic Cell",
+        "description": "Arc weld 2x M10 high-strength weld nuts on rear face.",
+        "keyParameters": "Current 185A, Voltage 21V, Ar+CO2 80/20 gas 16 L/min",
+        "inspectionMethod": "Push-out torque test (60 Nm) & visual",
+        "x": 100,
+        "y": 540
+      },
+      {
+        "id": "st-60",
+        "stepNumber": "60",
+        "stepName": "E-Coat Surface Treatment (OP 40)",
+        "type": "operation",
+        "machine": "Automated 11-Stage Cathodic E-Coat Line",
+        "description": "Degrease, zinc phosphate pretreat, electrocoat black epoxy, oven cure 180°C 20 min.",
+        "keyParameters": "Bath temp 28 ± 1°C, Voltage 220V, Oven 185°C",
+        "inspectionMethod": "Fischer coating thickness gage",
+        "x": 100,
+        "y": 660
+      },
+      {
+        "id": "st-70",
+        "stepNumber": "70",
+        "stepName": "Final 100% Quality & Packaging",
+        "type": "inspection",
+        "machine": "Final Assembly & Packaging Cell",
+        "description": "100% check fixture verification, thread go/no-go gage, label barcode scanning into returnable steel pallet.",
+        "keyParameters": "Toyota Standard Returnable Pallet (50 pcs/pallet)",
+        "inspectionMethod": "100% Go/No-go pin fixture + Barcode scanner",
+        "x": 100,
+        "y": 780
+      }
+    ],
+    "p-1793895598616": []
+  },
+  "controlPlans": {
+    "p-1": [
+      {
+        "id": "cp-01",
+        "processNumber": "10",
+        "processName": "Raw Material Receiving",
+        "machineEquipment": "Coil Storage Bay",
+        "productCharacteristic": "Material Grade & Sheet Thickness",
+        "processCharacteristic": "Cleanliness / No rust & dent",
+        "specialCharacteristic": "Critical",
+        "specificationTolerance": "SPFC 590 Steel, 2.50 ± 0.05 mm",
+        "measurementTechnique": "MTC Review + Digital Micrometer",
+        "sampleSize": "3 coils / lot",
+        "frequency": "Every heat lot",
+        "controlMethod": "Receiving Inspection Sheet & ERP Hold",
+        "reactionPlan": "Reject coil lot, notify purchasing and steel mill immediately"
+      },
+      {
+        "id": "cp-02",
+        "processNumber": "20",
+        "processName": "Blanking & Piercing (OP 10)",
+        "machineEquipment": "AIDA 300T Press",
+        "productCharacteristic": "Hole Ø12.5 and Outer Contour",
+        "processCharacteristic": "Die Alignment & Burr Height",
+        "specialCharacteristic": "Major",
+        "specificationTolerance": "Ø12.50 +0.10/-0.00 mm, Burr < 0.08 mm",
+        "measurementTechnique": "Pin Gage + Toolmakers Microscope",
+        "sampleSize": "5 pcs",
+        "frequency": "First/Last piece & every 2 hrs",
+        "controlMethod": "X-bar & R Control Chart at Press",
+        "reactionPlan": "Stop press, adjust die clearance or replace punch pins"
+      },
+      {
+        "id": "cp-03",
+        "processNumber": "30",
+        "processName": "Forming & Flanging (OP 20)",
+        "machineEquipment": "Komatsu 400T Press",
+        "productCharacteristic": "Mounting Flange Angle & Flatness",
+        "processCharacteristic": "Nitrogen Cushion Pressure",
+        "specialCharacteristic": "Critical",
+        "specificationTolerance": "90.0° ± 0.5°, Flatness < 0.25 mm",
+        "measurementTechnique": "Check Fixture CF-51201 + Feeler Gage",
+        "sampleSize": "5 pcs",
+        "frequency": "Every 2 hours",
+        "controlMethod": "SPC Ppk tracking (target > 1.67)",
+        "reactionPlan": "Contain last 2 hours production, 100% sort, readjust die shim"
+      },
+      {
+        "id": "cp-04",
+        "processNumber": "50",
+        "processName": "Robotic Nut Welding (OP 30)",
+        "machineEquipment": "Yaskawa Welding Robot",
+        "productCharacteristic": "Weld Nut Push-off Strength & Thread Quality",
+        "processCharacteristic": "Shielding gas flow rate & Arc current",
+        "specialCharacteristic": "Critical",
+        "specificationTolerance": "Min 60 Nm torque, Thread M10x1.25-6H Go gage",
+        "measurementTechnique": "Torque Wrench Proof Tester + Thread Plug Gage",
+        "sampleSize": "3 pcs / shift",
+        "frequency": "Start of shift and after electrode service",
+        "controlMethod": "Daily destructive weld section + Torque log",
+        "reactionPlan": "Stop welding cell, 100% quarantine lot, repair weld parameters"
+      },
+      {
+        "id": "cp-05",
+        "processNumber": "60",
+        "processName": "E-Coat Painting (OP 40)",
+        "machineEquipment": "Cathodic E-Coat Line",
+        "productCharacteristic": "Paint Film Thickness & Salt Spray Resistance",
+        "processCharacteristic": "Bath temperature & Oven curing time",
+        "specialCharacteristic": "Major",
+        "specificationTolerance": "15 - 25 μm, 720h Salt Spray without blister",
+        "measurementTechnique": "Electromagnetic Thickness Meter + ASTM B117",
+        "sampleSize": "5 pcs / rack",
+        "frequency": "Every 4 hours / 1 panel per day",
+        "controlMethod": "Coating thickness run chart",
+        "reactionPlan": "Adjust voltage/conveyor speed, strip and recoat affected lot"
+      }
+    ],
+    "p-1793895598616": []
+  },
+  "dimensionalReports": {
+    "p-1": [
+      {
+        "id": "dim-1",
+        "characteristicNumber": 1,
+        "drawingRequirement": "Total Bracket Length (Datum A-B)",
+        "specification": "245.00 ± 0.30 mm",
+        "upperLimit": 245.3,
+        "lowerLimit": 244.7,
+        "samples": [
+          245.05,
+          245.12,
+          244.98,
+          245.08,
+          245.15
+        ],
+        "mean": 245.076,
+        "min": 244.98,
+        "max": 245.15,
+        "measuringEquipment": "Mitutoyo Crysta-Apex CMM (Cal: 2026-08-15)",
+        "inspector": "Siriporn R. (CMM Inspector)",
+        "inspectionDate": "2026-11-04",
+        "result": "PASS"
+      },
+      {
+        "id": "dim-2",
+        "characteristicNumber": 2,
+        "drawingRequirement": "Hole Pitch Distance (Datum C to Hole #2)",
+        "specification": "140.00 ± 0.15 mm",
+        "upperLimit": 140.15,
+        "lowerLimit": 139.85,
+        "samples": [
+          140.02,
+          140.05,
+          139.98,
+          140.06,
+          140.01
+        ],
+        "mean": 140.024,
+        "min": 139.98,
+        "max": 140.06,
+        "measuringEquipment": "Mitutoyo Crysta-Apex CMM",
+        "inspector": "Siriporn R. (CMM Inspector)",
+        "inspectionDate": "2026-11-04",
+        "result": "PASS"
+      },
+      {
+        "id": "dim-3",
+        "characteristicNumber": 3,
+        "drawingRequirement": "Mounting Flange Angle (Degree)",
+        "specification": "90.00° ± 0.50°",
+        "upperLimit": 90.5,
+        "lowerLimit": 89.5,
+        "samples": [
+          90.15,
+          90.22,
+          89.95,
+          90.1,
+          90.18
+        ],
+        "mean": 90.12,
+        "min": 89.95,
+        "max": 90.22,
+        "measuringEquipment": "Optical Bevel Goniometer / CMM",
+        "inspector": "Siriporn R. (CMM Inspector)",
+        "inspectionDate": "2026-11-04",
+        "result": "PASS"
+      },
+      {
+        "id": "dim-4",
+        "characteristicNumber": 4,
+        "drawingRequirement": "Mounting Hole Diameter (2x)",
+        "specification": "Ø 12.50 +0.15 / -0.00 mm",
+        "upperLimit": 12.65,
+        "lowerLimit": 12.5,
+        "samples": [
+          12.56,
+          12.58,
+          12.54,
+          12.57,
+          12.55
+        ],
+        "mean": 12.56,
+        "min": 12.54,
+        "max": 12.58,
+        "measuringEquipment": "Mitutoyo Holtest Digital Micrometer",
+        "inspector": "Siriporn R. (CMM Inspector)",
+        "inspectionDate": "2026-11-04",
+        "result": "PASS"
+      },
+      {
+        "id": "dim-5",
+        "characteristicNumber": 5,
+        "drawingRequirement": "Bracket Mounting Face Flatness",
+        "specification": "0.20 mm max",
+        "upperLimit": 0.2,
+        "lowerLimit": 0,
+        "samples": [
+          0.08,
+          0.11,
+          0.09,
+          0.13,
+          0.07
+        ],
+        "mean": 0.096,
+        "min": 0.07,
+        "max": 0.13,
+        "measuringEquipment": "CMM Surface Scanning Probe",
+        "inspector": "Siriporn R. (CMM Inspector)",
+        "inspectionDate": "2026-11-04",
+        "result": "PASS"
+      },
+      {
+        "id": "dim-6",
+        "characteristicNumber": 6,
+        "drawingRequirement": "M10 Nut Thread Pitch Diameter",
+        "specification": "M10 x 1.25 - 6H",
+        "upperLimit": 10.2,
+        "lowerLimit": 10,
+        "samples": [
+          10.08,
+          10.1,
+          10.07,
+          10.09,
+          10.08
+        ],
+        "mean": 10.084,
+        "min": 10.07,
+        "max": 10.1,
+        "measuringEquipment": "Thread Plug Gage GO/NOGO + CMM",
+        "inspector": "Siriporn R. (CMM Inspector)",
+        "inspectionDate": "2026-11-04",
+        "result": "PASS"
+      }
+    ],
+    "p-1793895598616": []
+  },
+  "pswRecords": {
+    "p-1": {
+      "partName": "Engine Mounting Support Bracket LH",
+      "partNumber": "51201-0K150-C",
+      "drawingNumber": "DWG-51201-REV-04",
+      "engineeringChangeLevel": "ECL-04 (High Tensile Steel Upgrade)",
+      "drawingDate": "2026-09-15",
+      "additionalEngineeringChanges": "ECN-2026-TMT-119",
+      "shownOnDrawingNo": "DWG-51201-REV-04",
+      "purchaseOrderNo": "PO-TMT-2026-99812",
+      "weightKg": 1.485,
+      "checkingAidNo": "CF-51201-LH-V2",
+      "checkingAidDate": "2026-10-01",
+      "supplierName": "Apex Automotive Precision Parts Ltd.",
+      "supplierAddress": "88/1 Moo 4, Bangna-Trad Km. 29, Bang Bo, Samut Prakan 10560 Thailand",
+      "supplierVendorCode": "V-TMT-7421",
+      "customerName": "Toyota Motor Thailand Co., Ltd.",
+      "customerDivision": "Chassis & Engine Mounting Purchasing & QA Division",
+      "customerBuyer": "Prasert Suksomboon",
+      "application": "Toyota Hilux Revo / Fortuner 2.8L GD Turbo Diesel",
+      "submissionLevel": 3,
+      "submissionReason": "Engineering Change(s)",
+      "dimensionalTestResults": true,
+      "materialTestResults": true,
+      "performanceTestResults": true,
+      "appearanceTestResults": true,
+      "statisticalProcessPackage": true,
+      "materialsReportedToIMDS": true,
+      "imdsIdNo": "IMDS-TH-9843219",
+      "moldsCavitiesProcesses": "Die Line #B2 (Tandem 400T / 300T), Robot Weld Cell #R3",
+      "declarationAuthorized": true,
+      "authorizedSignatureName": "Somchai Prasert",
+      "authorizedSignatureTitle": "Quality Assurance Manager",
+      "authorizedDate": "2026-11-05",
+      "customerApprovalName": "Dr. Akira Tanaka",
+      "customerApprovalDate": "2026-11-05",
+      "customerApprovalStatus": "Pending",
+      "customerRemarks": "Pending final review of Cpk study on weld nut torque."
+    },
+    "p-1793895598616": {
+      "partName": "Test",
+      "drawingDate": "2026-11-05",
+      "additionalEngineeringChanges": "None",
+      "purchaseOrderNo": "Pending",
+      "weightKg": 1,
+      "checkingAidNo": "CF-TBD",
+      "checkingAidDate": "2026-11-05",
+      "supplierVendorCode": "V-AUTO-01",
+      "customerDivision": "Purchasing & Quality Assurance",
+      "customerBuyer": "Responsible Buyer",
+      "application": "Automotive OEM Application",
+      "dimensionalTestResults": false,
+      "materialTestResults": false,
+      "performanceTestResults": false,
+      "appearanceTestResults": false,
+      "statisticalProcessPackage": false,
+      "materialsReportedToIMDS": false,
+      "moldsCavitiesProcesses": "Main Production Line",
+      "declarationAuthorized": false,
+      "authorizedSignatureTitle": "Lead Quality Engineer",
+      "authorizedDate": "2026-11-05",
+      "customerApprovalStatus": "Pending"
+    }
+  },
+  "notifications": [
+    {
+      "title": "New PPAP Project Created",
+      "message": "Project undefined for undefined has been initialized.",
+      "type": "info",
+      "projectId": "p-1793895598616",
+      "id": "notif-1793895598618-xzvk",
+      "timestamp": "2026-11-05T16:19:58.618Z",
+      "read": false
+    },
+    {
+      "id": "notif-1",
+      "title": "PPAP Submitted for Review",
+      "message": "Project PPAP-2026-001 (Toyota Hilux Bracket) was submitted by Nattaporn Chaiyasin for Quality Manager review.",
+      "type": "info",
+      "projectId": "p-1",
+      "timestamp": "2026-11-05T14:17:26.988Z",
+      "read": false
+    },
+    {
+      "id": "notif-2",
+      "title": "Element Rejection Alert",
+      "message": "Project PPAP-2026-004 (Isuzu Fuel Pipe Clamp): Element #6 (PFMEA) and #9 (Dimensional) were rejected by Customer QA.",
+      "type": "alert",
+      "projectId": "p-4",
+      "timestamp": "2026-11-05T11:17:26.988Z",
+      "read": false
+    },
+    {
+      "id": "notif-3",
+      "title": "Upcoming Submission Deadline",
+      "message": "Project PPAP-2026-001 submission target is in 15 days (2026-11-20). 2 elements remaining for final sign-off.",
+      "type": "warning",
+      "projectId": "p-1",
+      "timestamp": "2026-11-04T16:17:26.988Z",
+      "read": true
+    },
+    {
+      "id": "notif-4",
+      "title": "PPAP Approved by Customer",
+      "message": "Project PPAP-2026-003 (Ford Ranger Bezel) has received full PSW sign-off from Ford AAT Quality Engineering.",
+      "type": "success",
+      "projectId": "p-3",
+      "timestamp": "2026-11-03T16:17:26.988Z",
+      "read": true
+    }
+  ],
+  "auditLogs": [
+    {
+      "projectId": "p-1793895598616",
+      "userRole": "Quality Engineer",
+      "action": "CREATE_PROJECT",
+      "details": "Created PPAP project undefined (Test) Level undefined",
+      "id": "log-1793895598616-ah91",
+      "timestamp": "2026-11-05T16:19:58.616Z"
+    },
+    {
+      "id": "log-1",
+      "projectId": "p-1",
+      "projectNumber": "PPAP-2026-001",
+      "user": "Nattaporn Chaiyasin",
+      "userRole": "Quality Engineer",
+      "action": "SUBMIT_FOR_REVIEW",
+      "elementName": "All Elements",
+      "details": "Submitted Level 3 package for internal Quality Manager approval.",
+      "timestamp": "2026-11-05T14:17:26.988Z"
+    },
+    {
+      "id": "log-2",
+      "projectId": "p-1",
+      "projectNumber": "PPAP-2026-001",
+      "user": "Siriporn Rattanaporn",
+      "userRole": "Inspector",
+      "action": "UPDATE_DIMENSIONAL",
+      "elementName": "9. Dimensional Results",
+      "details": "Uploaded CMM inspection data for 5 sample parts. All 6 balloon items passed.",
+      "timestamp": "2026-11-05T10:17:26.988Z"
+    },
+    {
+      "id": "log-3",
+      "projectId": "p-4",
+      "projectNumber": "PPAP-2026-004",
+      "user": "Somchai Prasert",
+      "userRole": "Quality Manager",
+      "action": "REJECT_ELEMENT",
+      "elementName": "6. Process FMEA (PFMEA)",
+      "details": "Rejected with comment: S/O/D ratings need re-evaluation due to historic die wear.",
+      "timestamp": "2026-11-05T11:17:26.988Z"
+    },
+    {
+      "id": "log-4",
+      "projectId": "p-3",
+      "projectNumber": "PPAP-2026-003",
+      "user": "Somchai Prasert",
+      "userRole": "Quality Manager",
+      "action": "APPROVE_PSW",
+      "elementName": "18. Part Submission Warrant",
+      "details": "Signed PSW and issued final Level 2 approval package.",
+      "timestamp": "2026-11-03T16:17:26.988Z"
+    }
+  ],
+  "elementTables": {
+    "p-1_10": [
+      {
+        "id": "mat-1",
+        "testType": "Mechanical Properties",
+        "testSpec": "JIS G3113 / ISO 6892-1",
+        "characteristic": "Tensile Strength (Yield Point ReH)",
+        "specRequirement": "Min 305 MPa",
+        "actualResult": "348.2 MPa",
+        "sampleQty": "5 tensile test specimens from coil #COIL-2026-99",
+        "testLab": "Certified Central Metallurgy Testing Lab (ISO/IEC 17025)",
+        "testDate": "2026-02-12",
+        "result": "PASS"
+      },
+      {
+        "id": "mat-2",
+        "testType": "Mechanical Properties",
+        "testSpec": "JIS G3113 / ISO 6892-1",
+        "characteristic": "Ultimate Tensile Strength (Rm)",
+        "specRequirement": "440 - 560 MPa",
+        "actualResult": "482.6 MPa",
+        "sampleQty": "5 tensile test specimens from coil #COIL-2026-99",
+        "testLab": "Certified Central Metallurgy Testing Lab (ISO/IEC 17025)",
+        "testDate": "2026-02-12",
+        "result": "PASS"
+      },
+      {
+        "id": "mat-3",
+        "testType": "Chemical Composition",
+        "testSpec": "ASTM E415 (Optical Emission Spectrometry)",
+        "characteristic": "Carbon Equivalent (Ceq) & Silicon Content",
+        "specRequirement": "C ≤ 0.18%, Si ≤ 0.35%, P ≤ 0.035%",
+        "actualResult": "C: 0.12%, Si: 0.18%, P: 0.016%",
+        "sampleQty": "3 spark OES burns",
+        "testLab": "Certified Central Metallurgy Testing Lab (ISO/IEC 17025)",
+        "testDate": "2026-02-12",
+        "result": "PASS"
+      },
+      {
+        "id": "mat-4",
+        "testType": "Corrosion / Salt Spray",
+        "testSpec": "ASTM B117 / JIS Z 2371",
+        "characteristic": "Neutral Salt Spray Resistance (NSS 480 Hours)",
+        "specRequirement": "No red rust after 480 hours; Max 2mm creep at cross-hatch scribe",
+        "actualResult": "No red rust after 500 hours; Scribe creep 0.8 mm",
+        "sampleQty": "6 production e-coated parts from PPAP batch",
+        "testLab": "Apex Automotive Environmental Chamber Facility",
+        "testDate": "2026-02-28",
+        "result": "PASS"
+      },
+      {
+        "id": "mat-5",
+        "testType": "Coating & Plating",
+        "testSpec": "ASTM D3359 (Cross-Cut Tape Adhesion)",
+        "characteristic": "Cathodic E-Coat Adhesion Rating",
+        "specRequirement": "Classification 5B (0% flaking or detachment)",
+        "actualResult": "Classification 5B (Clean sharp cuts, 0% flaking)",
+        "sampleQty": "10 sample brackets",
+        "testLab": "Quality Assurance Chemical Laboratory",
+        "testDate": "2026-02-15",
+        "result": "PASS"
+      }
+    ],
+    "p-1_8": [
+      {
+        "id": "msa-1",
+        "gageId": "GAGE-CMM-01",
+        "gageDescription": "Mitutoyo Crysta-Apex S9106 CNC Coordinate Measuring Machine",
+        "characteristic": "Mounting Hole Center-to-Center Distance (140.0 ± 0.15 mm)",
+        "studyType": "Gage R&R (Variable ANOVA)",
+        "trials": "3 Appraisers x 3 Trials x 10 Parts",
+        "percentGRR": 6.8,
+        "ndc": 15,
+        "biasLinearity": "Bias: 0.0006 mm / Linearity: Passed",
+        "status": "Acceptable (%GRR < 10%)",
+        "assessor": "Nattaporn Chaiyasin (Quality Engineer) (Certified Metrologist)"
+      },
+      {
+        "id": "msa-2",
+        "gageId": "GAGE-MIC-04",
+        "gageDescription": "Mitutoyo IP65 Digital Electronic Micrometer (0-25mm, Res 0.001mm)",
+        "characteristic": "Sheet Stock Thickness after Stamping (3.50 ± 0.08 mm)",
+        "studyType": "Gage R&R (Variable ANOVA)",
+        "trials": "3 Appraisers x 3 Trials x 10 Parts",
+        "percentGRR": 8.2,
+        "ndc": 12,
+        "biasLinearity": "Bias: 0.0004 mm / Linearity: Passed",
+        "status": "Acceptable (%GRR < 10%)",
+        "assessor": "Siriporn R. (CMM Inspector)"
+      },
+      {
+        "id": "msa-3",
+        "gageId": "GAGE-CHK-08",
+        "gageDescription": "Dedicated Pneumatic Go / No-Go Thread Pin Gage (M10 x 1.25-6H)",
+        "characteristic": "Weld Nut Thread Pitch & Major Diameter Conformity",
+        "studyType": "Attribute Gage Study (Kappa)",
+        "trials": "3 Appraisers x 2 Trials x 50 Parts",
+        "percentGRR": 4.5,
+        "ndc": 99,
+        "biasLinearity": "Kappa coefficient k = 1.00 (Perfect agreement)",
+        "status": "Acceptable (%GRR < 10%)",
+        "assessor": "QA Tooling Specialist"
+      }
+    ],
+    "p-1_1": [
+      {
+        "id": "dr-1",
+        "itemNo": 1,
+        "docNumber": "DWG-51201-REV-04",
+        "description": "Engine Mounting Support Bracket LH - General Assembly & Critical Datum Schemes",
+        "revLevel": "ECL-04 (High Tensile Steel Upgrade)",
+        "releaseDate": "2026-01-15",
+        "format": "2D Drawing (PDF)",
+        "drawnBy": "Nattaporn Chaiyasin (Quality Engineer)",
+        "changeNotice": "ECN-2026-088",
+        "status": "Customer Released"
+      },
+      {
+        "id": "dr-2",
+        "itemNo": 2,
+        "docNumber": "CAD-3D-51201-0K150-C",
+        "description": "Engine Mounting Support Bracket LH - Parametric 3D Solid Model with GD&T Annotation",
+        "revLevel": "ECL-04 (High Tensile Steel Upgrade)",
+        "releaseDate": "2026-01-18",
+        "format": "3D CAD (STEP)",
+        "drawnBy": "Chaiwat B. (CAD Specialist)",
+        "changeNotice": "ECN-2026-088",
+        "status": "Customer Released"
+      },
+      {
+        "id": "dr-3",
+        "itemNo": 3,
+        "docNumber": "SPEC-MAT-51201-0K150-C-01",
+        "description": "Raw Material Specification: High-Strength Low-Alloy Structural Steel",
+        "revLevel": "Rev 2",
+        "releaseDate": "2026-01-10",
+        "format": "Material Spec (PDF)",
+        "drawnBy": "Metallurgy Team",
+        "changeNotice": "SPEC-CHG-14",
+        "status": "Approved"
+      }
+    ]
+  }
+}

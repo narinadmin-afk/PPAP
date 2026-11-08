@@ -24,7 +24,7 @@ import { Notification, SupportedLanguage, UserRole } from '../../types/ppap';
 interface NavbarProps {
   onOpenNewProject: () => void;
   onOpenAIGenerator: () => void;
-  onNavigate: (view: 'dashboard' | 'projects' | 'completeness' | 'audit') => void;
+  onNavigate: (view: 'dashboard' | 'projects' | 'completeness' | 'audit' | 'files') => void;
   isSidebarCollapsed?: boolean;
   onToggleSidebar?: () => void;
 }

@@ -1,7 +1,8 @@
-/**
- * Standard AIAG PPAP 4th Edition & IATF 16949 Element Table Definitions
+/** 
+ * Standard AIAG PPAP 4th Edition & IATF 16949 Element Table Definitions 
  * Provides column specifications and authentic automotive seed rows for all 18 elements.
- */
+ * Updated to match professional PPAP layout from PPAP_Forms_Suite_Automotive_Glass_Final.xlsx
+ */ 
 
 export interface ElementTableColumn {
   key: string;
@@ -129,17 +130,18 @@ export const ELEMENT_TABLE_DEFINITIONS: Record<number, ElementTableDefinition> =
     nameTh: '10. ผลการทดสอบวัสดุและสมรรถนะ (Material & Performance Test Results)',
     standardRef: 'AIAG PPAP 4.2.2.10 / ASTM / ISO / Customer Engineering Standards',
     descriptionTh: 'ตารางบันทึกผลการทดสอบเชิงกล เคมี ความทนทาน และการเคลือบผิว เปรียบเทียบกับสเปกจริง',
-    auditTipsTh: 'ต้องมีเลข Lot ผลิตที่สอดคล้องกับ Sample Production Parts และระบุมาตรฐานทดสอบ (ASTM/ISO)',
+    auditTipsTh: 'ต้องมีเลข Lot ผลิตที่สอดคล้องกับ Sample Production Parts และระบุมาตรฐานทดสอบ (ASTM/ISO). Refer to PPAP-forms-professional-layout.md for consolidated column structure matching Excel: PPAP_Forms_Suite_Automotive_Glass_Final.xlsx',
     columns: [
-      { key: 'testType', label: 'Test Category', labelTh: 'ประเภทการทดสอบ', type: 'select', options: ['Mechanical Properties', 'Chemical Composition', 'Corrosion / Salt Spray', 'Coating & Plating', 'Durability & Fatigue', 'Environmental / Thermal'], width: 'w-44' },
-      { key: 'testSpec', label: 'Test Specification', labelTh: 'มาตรฐานการทดสอบ', type: 'text', width: 'w-44' },
-      { key: 'characteristic', label: 'Tested Characteristic', labelTh: 'คุณสมบัติที่ทดสอบ', type: 'text', width: 'w-52' },
-      { key: 'specRequirement', label: 'Specification Limit', labelTh: 'ค่าเกณฑ์มาตรฐาน', type: 'text', width: 'w-44' },
-      { key: 'actualResult', label: 'Actual Test Result', labelTh: 'ค่าที่วัดได้จริง', type: 'text', width: 'w-40' },
-      { key: 'sampleQty', label: 'Sample Qty / Lot', labelTh: 'จำนวน / Lot', type: 'text', width: 'w-36' },
-      { key: 'testLab', label: 'Qualified Laboratory', labelTh: 'ห้องปฏิบัติการที่ทดสอบ', type: 'text', width: 'w-48' },
+      { key: 'itemNo', label: 'Item #', labelTh: 'ลำดับ', type: 'number', width: 'w-16' },
+      { key: 'materialCode', label: 'Material Code', labelTh: 'รหัสวัสดุ', type: 'text', width: 'w-40' },
+      { key: 'materialName', label: 'Material Name', labelTh: 'ชื่อวัสดุ', type: 'text', width: 'w-56' },
+      { key: 'chemicalComposition', label: 'Chemical Composition', labelTh: 'องค์ประกอบเคมี', type: 'text', width: 'w-60' },
+      { key: 'specLimit', label: 'Specification Limit', labelTh: 'ขอบเขตสเปค', type: 'text', width: 'w-44' },
+      { key: 'testResult', label: 'Test Result', labelTh: 'ผลการทดสอบ', type: 'text', width: 'w-40' },
+      { key: 'compliance', label: 'Compliance', labelTh: 'ความสอดคล้อง', type: 'select', options: ['Complies', 'Partial', 'Non-Compliant'], width: 'w-32', isBadge: true },
       { key: 'testDate', label: 'Test Date', labelTh: 'วันที่ทดสอบ', type: 'date', width: 'w-32' },
-      { key: 'result', label: 'Verdict', labelTh: 'ผลการทดสอบ', type: 'select', options: ['PASS', 'FAIL'], width: 'w-24', isBadge: true }
+      { key: 'testLab', label: 'Qualified Laboratory', labelTh: 'ห้องปฏิบัติการที่ทดสอบ', type: 'text', width: 'w-48' },
+      { key: 'lotNumber', label: 'Lot / Heat Number', labelTh: 'เลข Lot / เลขความร้อน', type: 'text', width: 'w-36' }
     ]
   },
   11: {
@@ -272,9 +274,9 @@ export const ELEMENT_TABLE_DEFINITIONS: Record<number, ElementTableDefinition> =
   }
 };
 
-/**
- * Generate authentic automotive seed rows for any given element
- */
+/** 
+ * Generate authentic automotive seed rows for any given element 
+ */ 
 export function getDefaultRowsForElement(
   elementId: number,
   project: {
@@ -469,63 +471,55 @@ export function getDefaultRowsForElement(
       return [
         {
           id: 'mat-1',
-          testType: 'Mechanical Properties',
-          testSpec: 'JIS G3113 / ISO 6892-1',
-          characteristic: 'Tensile Strength (Yield Point ReH)',
-          specRequirement: 'Min 305 MPa',
-          actualResult: '348.2 MPa',
-          sampleQty: '5 tensile test specimens from coil #COIL-2026-99',
+          itemNo: 1,
+          materialCode: 'FG-SIO2',
+          materialName: 'Float Glass SiO2',
+          chemicalComposition: 'SiO2 >= 70.0 %',
+          specLimit: 'SiO2 >= 70.0 %',
+          testResult: '72.30 % (Complies)',
+          compliance: 'Complies',
+          testDate: '2026-10-13',
           testLab: 'Certified Central Metallurgy Testing Lab (ISO/IEC 17025)',
-          testDate: '2026-02-12',
-          result: 'PASS'
+          lotNumber: 'COIL-2026-99'
         },
         {
           id: 'mat-2',
-          testType: 'Mechanical Properties',
-          testSpec: 'JIS G3113 / ISO 6892-1',
-          characteristic: 'Ultimate Tensile Strength (Rm)',
-          specRequirement: '440 - 560 MPa',
-          actualResult: '482.6 MPa',
-          sampleQty: '5 tensile test specimens from coil #COIL-2026-99',
+          itemNo: 2,
+          materialCode: 'FG-CAO',
+          materialName: 'Float Glass CaO',
+          chemicalComposition: 'CaO 8.0 - 13.0 %',
+          specLimit: 'CaO 8.0 - 13.0 %',
+          testResult: '9.10 % (Complies)',
+          compliance: 'Complies',
+          testDate: '2026-10-13',
           testLab: 'Certified Central Metallurgy Testing Lab (ISO/IEC 17025)',
-          testDate: '2026-02-12',
-          result: 'PASS'
+          lotNumber: 'COIL-2026-99'
         },
         {
           id: 'mat-3',
-          testType: 'Chemical Composition',
-          testSpec: 'ASTM E415 (Optical Emission Spectrometry)',
-          characteristic: 'Carbon Equivalent (Ceq) & Silicon Content',
-          specRequirement: 'C ≤ 0.18%, Si ≤ 0.35%, P ≤ 0.035%',
-          actualResult: 'C: 0.12%, Si: 0.18%, P: 0.016%',
-          sampleQty: '3 spark OES burns',
+          itemNo: 3,
+          materialCode: 'PVB-TS',
+          materialName: 'PVB Interlayer',
+          chemicalComposition: 'Tensile Strength >= 20.0 MPa',
+          specLimit: 'Tensile Strength >= 20.0 MPa',
+          testResult: '23.50 MPa (Complies)',
+          compliance: 'Complies',
+          testDate: '2026-10-13',
           testLab: 'Certified Central Metallurgy Testing Lab (ISO/IEC 17025)',
-          testDate: '2026-02-12',
-          result: 'PASS'
+          lotNumber: 'PPAP-BATCH-001'
         },
         {
           id: 'mat-4',
-          testType: 'Corrosion / Salt Spray',
-          testSpec: 'ASTM B117 / JIS Z 2371',
-          characteristic: 'Neutral Salt Spray Resistance (NSS 480 Hours)',
-          specRequirement: 'No red rust after 480 hours; Max 2mm creep at cross-hatch scribe',
-          actualResult: 'No red rust after 500 hours; Scribe creep 0.8 mm',
-          sampleQty: '6 production e-coated parts from PPAP batch',
-          testLab: 'Apex Automotive Environmental Chamber Facility',
-          testDate: '2026-02-28',
-          result: 'PASS'
-        },
-        {
-          id: 'mat-5',
-          testType: 'Coating & Plating',
-          testSpec: 'ASTM D3359 (Cross-Cut Tape Adhesion)',
-          characteristic: 'Cathodic E-Coat Adhesion Rating',
-          specRequirement: 'Classification 5B (0% flaking or detachment)',
-          actualResult: 'Classification 5B (Clean sharp cuts, 0% flaking)',
-          sampleQty: '10 sample brackets',
-          testLab: 'Quality Assurance Chemical Laboratory',
-          testDate: '2026-02-15',
-          result: 'PASS'
+          itemNo: 4,
+          materialCode: 'PVB-MC',
+          materialName: 'PVB Moisture Content',
+          chemicalComposition: 'Moisture <= 0.40 %',
+          specLimit: 'Moisture <= 0.40 %',
+          testResult: '0.32 % (Complies)',
+          compliance: 'Complies',
+          testDate: '2026-10-13',
+          testLab: 'Certified Central Metallurgy Testing Lab (ISO/IEC 17025)',
+          lotNumber: 'PPAP-BATCH-001'
         }
       ];
 
@@ -662,80 +656,7 @@ export function getDefaultRowsForElement(
           partNumber: `${pNum} (${ecl})`,
           storageLocation: 'QA Environment-Controlled Cabinet #M-01 (Temp 20 ± 2°C, Humidity < 50%)',
           signedDate: '2026-02-10',
-          signee: 'Somchai Prasert (Quality Manager)',
-          retentionExpiry: 'Life of Vehicle Production + 1 Year (Estimated 2036)',
-          condition: 'Treated with dry VCI anti-oxidation film and double sealed in transparent acrylic case.'
-        },
-        {
-          id: 'mst-2',
-          masterId: `MST-BOUNDARY-${pNum}-01`,
-          type: 'Boundary Upper Limit (+Tol)',
-          partNumber: `${pNum} (${ecl})`,
-          storageLocation: 'Line Quality Inspection Station 1 Master Rack',
-          signedDate: '2026-02-12',
-          signee: `${eng}`,
-          retentionExpiry: 'Life of Vehicle Production (Estimated 2035)',
-          condition: 'Distinctive yellow boundary identification tag with authorized inspector stamp.'
-        }
-      ];
-
-    case 16: // Checking Aids
-      return [
-        {
-          id: 'chk-1',
-          aidId: `FIX-CHK-${pNum}-01`,
-          aidDescription: 'Pneumatic Clamp Geometric Contour & Hole Pitch Check Fixture',
-          partFeatureChecked: 'Mounting face flatness, 3-hole pitch alignment, and perimeter clearance',
-          lastCalDate: '2026-01-15',
-          nextCalDue: '2027-01-14',
-          calibrationProvider: 'Internal Toolroom Metrology (Cert #CAL-2026-88)',
-          gageRRVerified: 'Yes (%GRR < 10%)',
-          status: 'In Service & Verified'
-        },
-        {
-          id: 'chk-2',
-          aidId: `GAGE-THRD-M10`,
-          aidDescription: 'Carbide Go / No-Go Thread Plug Gage (M10 x 1.25 Class 6H)',
-          partFeatureChecked: '2x welded nut thread pitch and pitch diameter',
-          lastCalDate: '2026-02-01',
-          nextCalDue: '2026-08-01',
-          calibrationProvider: 'Mitutoyo Calibration Services Thailand (ISO 17025)',
-          gageRRVerified: 'Yes (%GRR < 10%)',
-          status: 'Calibrated'
-        }
-      ];
-
-    case 17: // Customer-Specific Requirements
-      return [
-        {
-          id: 'csr-1',
-          csrClause: 'CSR-IMDS-01',
-          requirementTitle: 'International Material Data System (IMDS) Substance Declaration',
-          customerStandard: 'GADSL / REACH / Customer Hazardous Substance Directive',
-          complianceMethod: 'Full material breakdown and MDS submitted to IMDS portal',
-          responsible: 'Nattaporn C. (Chemical Quality Specialist)',
-          evidenceAttachment: `IMDS_MDS_ID_9882104_Accepted.pdf`,
-          complianceStatus: 'Compliant & Customer Accepted'
-        },
-        {
-          id: 'csr-2',
-          csrClause: 'CSR-PKG-02',
-          requirementTitle: 'Standard Returnable Dunnage & AIAG B-10 Barcode Shipping Label',
-          customerStandard: `Toyota Standard Logistics Packaging Specification #TL-99`,
-          complianceMethod: '50 parts per returnable polypropylene box with custom EPP foam divider',
-          responsible: 'Logistics & Packaging Team',
-          evidenceAttachment: `Packaging_Approval_Signoff_P1.pdf`,
-          complianceStatus: 'Compliant & Customer Accepted'
-        },
-        {
-          id: 'csr-3',
-          csrClause: 'CSR-CQI-09',
-          requirementTitle: 'Special Process: Heat Treatment System Assessment (CQI-9 4th Edition)',
-          customerStandard: 'AIAG CQI-9 Self-Assessment Protocol',
-          complianceMethod: 'Annual CQI-9 internal audit conducted by certified auditor; zero high-risk findings',
-          responsible: 'Lead QA Auditor',
-          evidenceAttachment: `CQI-9_Audit_Report_2026_Rev1.pdf`,
-          complianceStatus: 'Compliant & Customer Accepted'
+          signee: 'Somchai Prasert ('
         }
       ];
 

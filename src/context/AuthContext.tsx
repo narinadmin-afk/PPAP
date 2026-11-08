@@ -7,7 +7,7 @@ interface AuthContextType {
   allUsers: User[];
   switchUser: (userId: string) => void;
   switchRole: (role: UserRole) => void;
-  canApprove: () => boolean;
+  canApprove: (userRole?: string) => boolean;
   canEdit: () => boolean;
   canCreateProject: () => boolean;
 }
@@ -22,22 +22,51 @@ const DEFAULT_USER: User = {
   signature: 'Somchai Prasert (QA Mgr)'
 };
 
+const DEFAULT_USERS: User[] = [
+  DEFAULT_USER,
+  {
+    id: 'u-2',
+    name: 'Nattaporn Chaiyasin (ณัฐพร ชัยสิน)',
+    email: 'nattaporn.c@autoquality.com',
+    role: 'Quality Engineer',
+    department: 'Quality Assurance',
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80',
+    signature: 'Nattaporn C. (QE)'
+  },
+  {
+    id: 'u-3',
+    name: 'Kittisak Wongsuwan (กิตติศักดิ์ วงษ์สุวรรณ)',
+    email: 'kittisak.w@autoquality.com',
+    role: 'Production Engineer',
+    department: 'Manufacturing Eng',
+    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&auto=format&fit=crop&q=80',
+    signature: 'Kittisak W. (PE)'
+  },
+  {
+    id: 'u-4',
+    name: 'Dr. Akira Tanaka (田中 晃)',
+    email: 'akira.tanaka@toyota-oem.com',
+    role: 'Administrator',
+    department: 'OEM Engineering & Systems',
+    avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&auto=format&fit=crop&q=80',
+    signature: 'A. Tanaka (Director)'
+  }
+];
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User>(() => {
-    const saved = localStorage.getItem('ppap_active_user');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch {
-        // fallback
-      }
+    try {
+      const saved = localStorage.getItem('ppap_active_user');
+      if (saved) return JSON.parse(saved);
+    } catch {
+      // fallback
     }
     return DEFAULT_USER;
   });
 
-  const [allUsers, setAllUsers] = useState<User[]>([DEFAULT_USER]);
+  const [allUsers, setAllUsers] = useState<User[]>(DEFAULT_USERS);
 
   useEffect(() => {
     api.getUsers()
@@ -45,26 +74,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (users && users.length > 0) {
           setAllUsers(users);
           const found = users.find(u => u.id === currentUser.id);
-          if (found) {
-            setCurrentUser(found);
-          }
+          if (found) setCurrentUser(found);
         }
       })
-      .catch(err => console.warn('Could not fetch users list:', err));
+      .catch(() => {
+        // use fallback default users
+      });
   }, []);
 
   const switchUser = (userId: string) => {
     const user = allUsers.find(u => u.id === userId);
     if (user) {
       setCurrentUser(user);
-      localStorage.setItem('ppap_active_user', JSON.stringify(user));
+      try {
+        localStorage.setItem('ppap_active_user', JSON.stringify(user));
+      } catch {}
     }
   };
 
   const switchRole = (role: UserRole) => {
     const updated = { ...currentUser, role };
     setCurrentUser(updated);
-    localStorage.setItem('ppap_active_user', JSON.stringify(updated));
+    try {
+      localStorage.setItem('ppap_active_user', JSON.stringify(updated));
+    } catch {}
   };
 
   const canApprove = () => {

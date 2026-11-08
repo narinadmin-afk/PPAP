@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: ppap-ikhu
+    env: node
+    buildCommand: npm run build
+    startCommand: npx serve -s dist
+    nodeVersion: 20
+    envVars:
+      - key: NODE_ENV
+        value: production

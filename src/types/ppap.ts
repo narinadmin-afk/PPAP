@@ -62,7 +62,7 @@ export interface FileAttachment {
 }
 
 export interface DocumentRevision {
-  revision: string; // 'Rev A', 'Rev B'
+  revision: string;
   changeDescription: string;
   preparedBy: string;
   reviewedBy?: string;
@@ -73,14 +73,15 @@ export interface DocumentRevision {
 }
 
 export interface PPAPElement {
-  id: number; // 1 to 18
+  id: number;
   name: string;
+  nameTh?: string;
   description: string;
   shortCode: string;
   status: ElementStatus;
   currentRevision: string;
   isApplicable: boolean;
-  requiredForLevel: Record<PPAPLevel, 'S' | 'R' | '*' | 'NA'>; // S: Submit to customer, R: Retain at supplier, *: Special, NA: Not Applicable
+  requiredForLevel: Record<number | string, 'S' | 'R' | '*' | 'NA'>;
   preparedBy?: string;
   reviewedBy?: string;
   approvedBy?: string;
@@ -92,19 +93,19 @@ export interface PPAPElement {
 
 export interface PPAPProject {
   id: string;
-  projectNumber: string; // e.g. "PPAP-2026-001"
+  projectNumber: string;
   customerName: string;
-  supplierName: string;
+  supplierName?: string;
   partName: string;
   partNumber: string;
-  drawingNumber: string;
-  engineeringChangeLevel: string;
-  manufacturingLocation: string;
-  submissionLevel: PPAPLevel;
-  submissionReason: SubmissionReason;
-  submissionDate: string;
+  drawingNumber?: string;
+  engineeringChangeLevel?: string;
+  manufacturingLocation?: string;
+  submissionLevel: PPAPLevel | number;
+  submissionReason?: SubmissionReason | string;
+  submissionDate?: string;
   responsibleEngineer: string;
-  status: ProjectStatus;
+  status?: ProjectStatus;
   notes?: string;
   createdAt: string;
   updatedAt: string;
@@ -118,20 +119,31 @@ export type ActionPriority = 'High' | 'Medium' | 'Low';
 
 export interface PFMEARow {
   id: string;
+  lineNo?: number;
+  lineNumber?: number;
+  processStage?: string;
   processStep: string;
   processFunction: string;
   failureMode: string;
   failureEffect: string;
+  severity: number;
+  classification?: string;
   failureCause: string;
+  occurrence: number;
+  currentProcessControls?: string;
   preventionControl: string;
   detectionControl: string;
-  severity: number; // 1-10
-  occurrence: number; // 1-10
-  detection: number; // 1-10
-  actionPriority: ActionPriority;
+  detection: number;
+  rpn?: number;
   recommendedAction: string;
   responsibility: string;
   targetCompletionDate: string;
+  actionTaken?: string;
+  revisedSeverity?: number;
+  revisedOccurrence?: number;
+  revisedDetection?: number;
+  revisedRpn?: number;
+  actionPriority: ActionPriority;
   status: 'Open' | 'In Progress' | 'Completed';
   notes?: string;
 }
@@ -141,7 +153,7 @@ export type ProcessNodeType = 'operation' | 'inspection' | 'transport' | 'storag
 
 export interface ProcessFlowStep {
   id: string;
-  stepNumber: string; // e.g. "10", "20", "30"
+  stepNumber: string;
   stepName: string;
   type: ProcessNodeType;
   machine: string;
@@ -174,12 +186,12 @@ export interface ControlPlanRow {
 // Dimensional Inspection Report
 export interface DimensionalRow {
   id: string;
-  characteristicNumber: number; // Balloon number
+  characteristicNumber: number;
   drawingRequirement: string;
   specification: string;
   upperLimit: number;
   lowerLimit: number;
-  samples: number[]; // 5 part actual readings
+  samples: number[];
   mean: number;
   min: number;
   max: number;
@@ -209,16 +221,14 @@ export interface PSWData {
   customerName: string;
   customerDivision: string;
   customerBuyer: string;
-  application: string; // e.g. "Toyota Hilux 2.8L GD Turbo"
+  application: string;
   submissionLevel: PPAPLevel;
   submissionReason: SubmissionReason;
-  // Test Results Verification
   dimensionalTestResults: boolean;
   materialTestResults: boolean;
   performanceTestResults: boolean;
   appearanceTestResults: boolean;
   statisticalProcessPackage: boolean;
-  // Declaration
   materialsReportedToIMDS: boolean;
   imdsIdNo?: string;
   moldsCavitiesProcesses: string;
@@ -255,3 +265,198 @@ export interface AuditLog {
 }
 
 export type SupportedLanguage = 'th' | 'en' | 'zh';
+
+export interface ElementTableColumn {
+  key: string;
+  label: string;
+  labelTh?: string;
+  type: 'text' | 'number' | 'select' | 'date' | 'textarea';
+  options?: string[];
+  width?: string;
+  placeholder?: string;
+  isBadge?: boolean;
+}
+
+export interface ElementTableDefinition {
+  elementId: number;
+  nameEn: string;
+  nameTh: string;
+  standardRef: string;
+  descriptionTh: string;
+  auditTipsTh: string;
+  columns: ElementTableColumn[];
+}
+
+// External Project File Management
+export interface ExternalProjectFile {
+  id: string;
+  projectId: string;
+  projectNumber: string;
+  partNumber: string;
+  partName: string;
+  fileName: string;
+  fileSize: number;
+  fileType: string;
+  fileExtension: string;
+  category:
+    | 'Drawing / CAD'
+    | 'Engineering Spec'
+    | 'Customer Approval'
+    | 'PFMEA / Control Plan'
+    | 'Material Test Cert'
+    | 'Dimensional Data'
+    | 'Supplier Submission'
+    | 'Master Package ZIP'
+    | 'General Quality Record';
+  elementId?: number;
+  revision: string;
+  uploadedBy: string;
+  uploadedAt: string;
+  notes?: string;
+  fileDataUrl?: string;
+  isPDF?: boolean;
+  status: 'Verified' | 'Pending Review' | 'Archived';
+}
+
+export interface PPAPFormData {
+  formNumber: string;
+  formRevDate: string;
+  companyInfo: CompanyInfoData;
+  ppapInitiation: PPAPInitiationData;
+  processFMEA: ProcessFMEAData;
+  controlPlan: ControlPlanData;
+  dimensionalTests: DimensionalTestData;
+  materialTests: MaterialTestData;
+  perforTests: PerforTestData;
+}
+
+export interface CompanyInfoData {
+  partNumber: string;
+  customerPartNumber: string;
+  partName: string;
+  drawingNumber: string;
+  revisionLevel: string;
+  revisionDate: string;
+  partWeight: string;
+  vehicleApplication: string;
+  organizationName: string;
+  organizationAddress: string;
+  supplierCode: string;
+  authorizedRep: string;
+  phoneNumber: string;
+  customerName: string;
+  customerBuyer: string;
+  testingLab: string;
+}
+
+export interface PPAPInitiationData {
+  partItemNumber: string;
+  drawingRevision: string;
+  drawingRevisionDate: string;
+  supplierName: string;
+  contactPerson: string;
+  address: string;
+  country: string;
+  recommendedLevel: string;
+  reasonForInitiation: string;
+  describeChange: string;
+  effectOfChange: string;
+  estimatedProductionDate: string;
+  specialRequirements: string;
+  purchasingApproval: { name: string; status: string; date: string };
+  rdApproval: { name: string; status: string; date: string };
+  qualityApproval: { name: string; status: string; date: string };
+}
+
+export interface ProcessFMEAData {
+  partItemNumber: string;
+  drawingRevision: string;
+  fmeaNumber: string;
+  dateOrig: string;
+  dateRev: string;
+  partName: string;
+  processResp: string;
+  preparedBy: string;
+  failureModes: Array<{
+    lineNo: number;
+    processStage: string;
+    processFunction: string;
+    potentialFailureMode: string;
+    potentialEffect: string;
+    severity: number;
+    classification: string;
+    potentialCause: string;
+    occurrence: number;
+    currentProcessControls: string;
+    detection: number;
+    rpn: number;
+    recommendedAction: string;
+    responsibility: string;
+    targetDate: string;
+    actionTaken?: string;
+    sevRev?: number;
+    occRev?: number;
+    detRev?: number;
+    rpnRev?: number;
+  }>;
+}
+
+export interface ControlPlanData {
+  controlPlanNo: string;
+  partNumber: string;
+  partName: string;
+  drawingRevision: string;
+  origDate: string;
+  coreTeam: string;
+  customerEngApproval?: { date: string };
+  customerQualityApproval?: { date: string };
+  otherApproval?: { date: string };
+  operations: Array<{
+    opNo: number;
+    processName: string;
+    machineTools: string;
+    charNo: number;
+    productCharacteristic: string;
+    processCharacteristic: string;
+    classification: string;
+    specificationTolerance: string;
+    evaluationMeasurementTechnique: string;
+    sampleSize: string;
+    sampleFreq: string;
+    controlMethod: string;
+    reactionPlan: string;
+  }>;
+}
+
+export interface DimensionalTestData {
+  item: number;
+  dimensionParameter: string;
+  specificationLimits: string;
+  testDate: string;
+  qtyTested: number;
+  sample1: string;
+  sample2: string;
+  sample3: string;
+  measurementMethod: string;
+  status: string;
+}
+
+export interface MaterialTestData {
+  item: number;
+  materialSpecification: string;
+  specificationLimits: string;
+  testDate: string;
+  qtyTested: number;
+  testResults: string;
+  status: string;
+}
+
+export interface PerforTestData {
+  item: number;
+  testDescription: string;
+  specificationLimits: string;
+  testDate: string;
+  qtyTested: number;
+  results: string;
+  status: string;
+}

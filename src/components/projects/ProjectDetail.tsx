@@ -16,7 +16,8 @@ import {
   CheckCircle,
   Clock,
   XCircle,
-  FileSpreadsheet
+  FileSpreadsheet,
+  UploadCloud
 } from 'lucide-react';
 import { PPAPProject } from '../../types/ppap';
 import { api } from '../../services/api';
@@ -30,6 +31,7 @@ import { DimensionalManager } from '../dimensional/DimensionalManager';
 import { PSWViewer } from '../psw/PSWViewer';
 import { CompletenessMatrix } from '../completeness/CompletenessMatrix';
 import { ExportCenter } from '../export/ExportCenter';
+import { ExternalFileRepository } from '../files/ExternalFileRepository';
 
 interface ProjectDetailProps {
   projectId: string;
@@ -55,6 +57,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
     | 'dimensional'
     | 'psw'
     | 'completeness'
+    | 'external-files'
     | 'export'
     | 'audit'
   >('elements');
@@ -90,6 +93,7 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
   const tabs = [
     { id: 'elements', label: t.tabElements, icon: Layers, badge: `${project.completedElements}/${project.totalElements}` },
     { id: 'standard-tables', label: '18 Elements Tables (ตารางเอกสารมาตรฐาน)', icon: FileSpreadsheet, badge: 'All 18' },
+    { id: 'external-files', label: 'ไฟล์ภายนอก (External Files)', icon: UploadCloud, badge: 'Upload' },
     { id: 'flow', label: t.tabProcessFlow, icon: GitBranch },
     { id: 'pfmea', label: t.tabPFMEA, icon: ShieldAlert },
     { id: 'control-plan', label: t.tabControlPlan, icon: ClipboardList },
@@ -283,6 +287,13 @@ export const ProjectDetail: React.FC<ProjectDetailProps> = ({
           <CompletenessMatrix
             project={project}
             onNavigateTab={(tab) => setActiveTab(tab as any)}
+          />
+        )}
+
+        {activeTab === 'external-files' && (
+          <ExternalFileRepository
+            projects={[project]}
+            selectedProjectId={project.id}
           />
         )}
 

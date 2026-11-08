@@ -14,82 +14,130 @@ import {
 // Excel Export Utilities
 // ==========================================
 
-export function exportPFMEAToExcel(project: PPAPProject, rows: PFMEARow[]) {
+export function exportPFMEAToExcel(project: PPAPProject, rows: PFMEARow[], meta?: any) {
   const wb = XLSX.utils.book_new();
 
-  // Header info
+  // Form WW-PPAP-102 Header info
   const headerData = [
-    ['PROCESS FAILURE MODE AND EFFECTS ANALYSIS (PFMEA)'],
-    ['Compliant with AIAG & VDA FMEA 1st Edition Standard'],
+    ['PROCESS FMEA'],
     [],
-    ['Project Number:', project.projectNumber, 'Part Name:', project.partName],
-    ['Part Number:', project.partNumber, 'Drawing Number:', project.drawingNumber],
-    ['Customer:', project.customerName, 'Supplier:', project.supplierName],
-    ['Responsible Engineer:', project.responsibleEngineer, 'Submission Level:', `Level ${project.submissionLevel}`],
-    ['Date Exported:', new Date().toLocaleDateString()],
+    ['Part / Item Number:', project.partNumber, '', 'Drawing Rev.:', project.engineeringChangeLevel || 'Rev. 03', '', 'FMEA Number:', meta?.fmeaNumber || `FMEA-${project.partNumber}-01`, '', 'Date (Orig.):', meta?.dateOrig || project.createdAt?.split('T')[0] || '2026-01-15'],
+    ['Part Name:', project.partName, '', 'Process Resp.:', meta?.processResp || project.manufacturingLocation || 'Manufacturing Dept', '', 'Prepared by:', meta?.preparedBy || project.responsibleEngineer, '', 'Date (Rev.):', meta?.dateRev || project.updatedAt?.split('T')[0] || new Date().toISOString().split('T')[0]],
+    ['Analysis Team:', meta?.analysisTeam || 'QA, Production Engineering, Tooling, R&D Core Team', '', '', '', '', '', '', 'Page:', '1 of 1'],
     []
   ];
 
-  const tableHeaders = [
-    'Process Step',
-    'Process Function',
-    'Failure Mode',
-    'Failure Effect',
-    'Failure Cause',
-    'Prevention Control',
-    'Detection Control',
-    'Severity (S)',
-    'Occurrence (O)',
-    'Detection (D)',
-    'Action Priority (AP)',
+  const tableHeaders1 = [
+    'Line Number',
+    'Process Stages',
+    'Process Functions / Requirements',
+    'Potential Failure Mode',
+    'Potential Effect(s) of Failure',
+    'Sev.',
+    'Class',
+    'Potential Cause(s) / Mechanism(s) of Failure',
+    'Occur.',
+    'Current Process Controls',
+    'Detec',
+    'RPN',
     'Recommended Action',
-    'Responsibility',
-    'Target Date',
-    'Status'
+    'Responsibility & Target Completion Date',
+    'Action Results',
+    '',
+    '',
+    '',
+    ''
   ];
 
-  const tableRows = rows.map(r => [
-    r.processStep,
-    r.processFunction,
-    r.failureMode,
-    r.failureEffect,
-    r.failureCause,
-    r.preventionControl,
-    r.detectionControl,
-    r.severity,
-    r.occurrence,
-    r.detection,
-    r.actionPriority,
-    r.recommendedAction,
-    r.responsibility,
-    r.targetCompletionDate,
-    r.status
-  ]);
+  const tableHeaders2 = [
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    'Action Taken',
+    'Sev.',
+    'Occ.',
+    'Det.',
+    'RPN'
+  ];
 
-  const sheetData = [...headerData, tableHeaders, ...tableRows];
+  const tableRows = rows.map((r, idx) => {
+    const s = r.severity || 1;
+    const o = r.occurrence || 1;
+    const d = r.detection || 1;
+    const rpn = r.rpn !== undefined ? r.rpn : (s * o * d);
+    const revS = r.revisedSeverity || s;
+    const revO = r.revisedOccurrence || (o > 1 ? o - 1 : 1);
+    const revD = r.revisedDetection || (d > 1 ? d - 1 : 1);
+    const revRpn = r.revisedRpn !== undefined ? r.revisedRpn : (revS * revO * revD);
+
+    return [
+      r.lineNo || r.lineNumber || (idx + 1),
+      r.processStage || r.processStep,
+      r.processFunction,
+      r.failureMode,
+      r.failureEffect,
+      s,
+      r.classification || 'None',
+      r.failureCause,
+      o,
+      r.currentProcessControls || `${r.preventionControl || ''}; ${r.detectionControl || ''}`,
+      d,
+      rpn,
+      r.recommendedAction,
+      `${r.responsibility} (${r.targetCompletionDate})`,
+      r.actionTaken || 'Implemented recommended corrective action',
+      revS,
+      revO,
+      revD,
+      revRpn
+    ];
+  });
+
+  const footerData = [
+    [],
+    ['Form Number: WW-PPAP-102'],
+    ['Form Revision Date: 22-Mar-2010']
+  ];
+
+  const sheetData = [...headerData, tableHeaders1, tableHeaders2, ...tableRows, ...footerData];
   const ws = XLSX.utils.aoa_to_sheet(sheetData);
 
   // Set column widths
   ws['!cols'] = [
-    { wch: 25 },
-    { wch: 30 },
-    { wch: 25 },
-    { wch: 30 },
-    { wch: 30 },
-    { wch: 25 },
-    { wch: 25 },
-    { wch: 8 },
-    { wch: 8 },
-    { wch: 8 },
-    { wch: 10 },
-    { wch: 30 },
-    { wch: 20 },
-    { wch: 15 },
-    { wch: 12 }
+    { wch: 10 }, // Line No
+    { wch: 22 }, // Process Stages
+    { wch: 30 }, // Process Functions
+    { wch: 28 }, // Failure Mode
+    { wch: 30 }, // Failure Effect
+    { wch: 6 },  // Sev
+    { wch: 8 },  // Class
+    { wch: 30 }, // Cause
+    { wch: 6 },  // Occur
+    { wch: 32 }, // Current Controls
+    { wch: 6 },  // Detec
+    { wch: 8 },  // RPN
+    { wch: 32 }, // Recommended Action
+    { wch: 25 }, // Responsibility & Date
+    { wch: 28 }, // Action Taken
+    { wch: 6 },  // Sev
+    { wch: 6 },  // Occ
+    { wch: 6 },  // Det
+    { wch: 8 }   // Rev RPN
   ];
 
-  XLSX.utils.book_append_sheet(wb, ws, 'PFMEA AIAG-VDA');
-  XLSX.writeFile(wb, `PFMEA_${project.partNumber}_${project.projectNumber}.xlsx`);
+  XLSX.utils.book_append_sheet(wb, ws, 'WW-PPAP-102 PFMEA');
+  XLSX.writeFile(wb, `PFMEA_WW-PPAP-102_${project.partNumber}.xlsx`);
 }
 
 export function exportControlPlanToExcel(project: PPAPProject, rows: ControlPlanRow[]) {
@@ -1034,10 +1082,7 @@ export function exportElementTableToPDF(
   return doc;
 }
 
-/**
- * Export PFMEA to PDF (AIAG & VDA 1st Edition)
- */
-export function exportPFMEAToPDF(project: PPAPProject, rows: PFMEARow[]): jsPDF {
+export function exportPFMEAToPDF(project: PPAPProject, rows: PFMEARow[], meta?: any): jsPDF {
   const doc = new jsPDF({
     orientation: 'landscape',
     unit: 'mm',
@@ -1047,88 +1092,247 @@ export function exportPFMEAToPDF(project: PPAPProject, rows: PFMEARow[]): jsPDF 
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
 
-  doc.setFillColor(15, 23, 42);
-  doc.rect(0, 0, pageWidth, 22, 'F');
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(13);
+  // 1. Title Banner
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.6);
+  doc.rect(10, 8, pageWidth - 20, 11);
   doc.setFont('helvetica', 'bold');
-  doc.text('PROCESS FMEA MATRIX (AIAG & VDA 1ST EDITION)', 14, 10);
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  doc.text(
-    `Project: ${project.projectNumber} | Part: ${project.partName} (${project.partNumber}) | Responsible: ${project.responsibleEngineer}`,
-    14,
-    17
-  );
+  doc.setFontSize(14);
+  doc.setTextColor(0, 0, 0);
+  doc.text('PROCESS FMEA', pageWidth / 2, 15.5, { align: 'center' });
 
-  let y = 30;
-  doc.setFillColor(241, 245, 249);
-  doc.rect(10, y, pageWidth - 20, 8, 'F');
-  doc.setTextColor(15, 23, 42);
-  doc.setFontSize(7);
+  // 2. Form WW-PPAP-102 Header Block
+  let yHeader = 24;
+  doc.setFontSize(7.5);
+  doc.setLineWidth(0.2);
+
+  const fmeaNo = meta?.fmeaNumber || `FMEA-${project.partNumber}-01`;
+  const dateOrig = meta?.dateOrig || project.createdAt?.split('T')[0] || '2026-01-15';
+  const dateRev = meta?.dateRev || project.updatedAt?.split('T')[0] || new Date().toISOString().split('T')[0];
+  const drawingRev = project.engineeringChangeLevel || 'Rev. 03';
+  const processResp = meta?.processResp || project.manufacturingLocation || 'Manufacturing Dept';
+  const preparedBy = meta?.preparedBy || project.responsibleEngineer;
+  const analysisTeam = meta?.analysisTeam || 'QA, Tooling, Production Engineering, R&D Core Team';
+
+  // Row 1
   doc.setFont('helvetica', 'bold');
-
-  doc.text('Step', 12, y + 5.5);
-  doc.text('Function', 26, y + 5.5);
-  doc.text('Failure Mode', 60, y + 5.5);
-  doc.text('Failure Effect', 100, y + 5.5);
-  doc.text('S', 140, y + 5.5);
-  doc.text('Potential Cause', 146, y + 5.5);
-  doc.text('O', 188, y + 5.5);
-  doc.text('Prev / Det Control', 194, y + 5.5);
-  doc.text('D', 234, y + 5.5);
-  doc.text('AP', 240, y + 5.5);
-  doc.text('Action', 252, y + 5.5);
-  doc.text('Status', 278, y + 5.5);
-
-  y += 10;
+  doc.text('Part / Item Number:', 10, yHeader);
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(6.5);
+  doc.text(project.partNumber || '-', 40, yHeader);
+  doc.line(39, yHeader + 1, 95, yHeader + 1);
+
+  doc.setFont('helvetica', 'bold');
+  doc.text('Drawing Rev.:', 110, yHeader);
+  doc.setFont('helvetica', 'normal');
+  doc.text(drawingRev, 134, yHeader);
+  doc.line(133, yHeader + 1, 165, yHeader + 1);
+
+  doc.setFont('helvetica', 'bold');
+  doc.text('FMEA Number:', 175, yHeader);
+  doc.setFillColor(254, 249, 195);
+  doc.rect(200, yHeader - 3.5, 32, 5, 'FD');
+  doc.setFont('helvetica', 'normal');
+  doc.text(fmeaNo, 202, yHeader);
+
+  doc.setFont('helvetica', 'bold');
+  doc.text('Date (Orig.):', 238, yHeader);
+  doc.rect(258, yHeader - 3.5, 29, 5, 'FD');
+  doc.setFont('helvetica', 'normal');
+  doc.text(dateOrig, 260, yHeader);
+
+  // Row 2
+  yHeader += 6.5;
+  doc.setFont('helvetica', 'bold');
+  doc.text('Part Name:', 10, yHeader);
+  doc.setFont('helvetica', 'normal');
+  doc.text(project.partName || '-', 40, yHeader);
+  doc.line(39, yHeader + 1, 95, yHeader + 1);
+
+  doc.setFont('helvetica', 'bold');
+  doc.text('Process Resp.:', 110, yHeader);
+  doc.rect(134, yHeader - 3.5, 32, 5, 'FD');
+  doc.setFont('helvetica', 'normal');
+  doc.text(processResp.substring(0, 18), 136, yHeader);
+
+  doc.setFont('helvetica', 'bold');
+  doc.text('Prepared by:', 175, yHeader);
+  doc.rect(200, yHeader - 3.5, 32, 5, 'FD');
+  doc.setFont('helvetica', 'normal');
+  doc.text(preparedBy.substring(0, 18), 202, yHeader);
+
+  doc.setFont('helvetica', 'bold');
+  doc.text('Date (Rev.):', 238, yHeader);
+  doc.rect(258, yHeader - 3.5, 29, 5, 'FD');
+  doc.setFont('helvetica', 'normal');
+  doc.text(dateRev, 260, yHeader);
+
+  // Row 3
+  yHeader += 6.5;
+  doc.setFont('helvetica', 'bold');
+  doc.text('Analysis Team:', 10, yHeader);
+  doc.rect(40, yHeader - 3.5, 126, 5, 'FD');
+  doc.setFont('helvetica', 'normal');
+  doc.text(analysisTeam.substring(0, 65), 42, yHeader);
+
+  doc.setFont('helvetica', 'bold');
+  doc.text('Page', 200, yHeader);
+  doc.rect(210, yHeader - 3.5, 12, 5, 'FD');
+  doc.text('1', 215, yHeader);
+  doc.text('Of', 226, yHeader);
+  doc.rect(232, yHeader - 3.5, 12, 5, 'FD');
+  doc.text('1', 237, yHeader);
+
+  // 3. Main Table Header
+  let y = yHeader + 6;
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(0.4);
+
+  // Column X offsets and widths (total = 277mm)
+  // Page width is 297mm, margin is 10mm left/right -> 277mm usable
+  const cols = [
+    { key: 'lineNo', label: 'Line\nNumber', w: 10, x: 10 },
+    { key: 'stage', label: 'Process\nStages', w: 18, x: 20 },
+    { key: 'req', label: 'Process Functions /\nRequirements', w: 26, x: 38 },
+    { key: 'mode', label: 'Potential\nFailure Mode', w: 24, x: 64 },
+    { key: 'effect', label: 'Potential Effect(s) of\nFailure', w: 26, x: 88 },
+    { key: 'sev', label: 'Sev.', w: 7, x: 114 },
+    { key: 'cls', label: 'Class', w: 9, x: 121 },
+    { key: 'cause', label: 'Potential Cause(s) /\nMechanism(s) of Failure', w: 26, x: 130 },
+    { key: 'occ', label: 'Occur.', w: 8, x: 156 },
+    { key: 'ctrl', label: 'Current\nProcess Controls', w: 26, x: 164 },
+    { key: 'det', label: 'Detec', w: 8, x: 190 },
+    { key: 'rpn', label: 'RPN', w: 9, x: 198 },
+    { key: 'action', label: 'Recomm\n-ended\nAction', w: 24, x: 207 },
+    { key: 'resp', label: 'Responsi-\nbility & Target\nDate', w: 18, x: 231 },
+    // Action Results group (total 38mm, 249 to 287)
+    { key: 'actTaken', label: 'Action\nTaken', w: 16, x: 249 },
+    { key: 'actSev', label: 'Sev.', w: 5, x: 265 },
+    { key: 'actOcc', label: 'Occ.', w: 5, x: 270 },
+    { key: 'actDet', label: 'Det.', w: 5, x: 275 },
+    { key: 'actRpn', label: 'RPN', w: 7, x: 280 }
+  ];
+
+  // Header Box Top Row
+  doc.setFillColor(255, 255, 255);
+  doc.rect(10, y, 239, 12, 'FD'); // cols 1 to 14
+  doc.rect(249, y, 38, 5, 'FD'); // Action Results Group header
+  doc.rect(249, y + 5, 38, 7, 'FD'); // Action Results sub-headers
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(6);
+  doc.text('Action Results', 268, y + 3.8, { align: 'center' });
+
+  // Draw vertical borders for headers
+  cols.forEach(c => {
+    if (c.x > 10 && c.x <= 249) {
+      doc.line(c.x, y, c.x, y + 12);
+    } else if (c.x > 249) {
+      doc.line(c.x, y + 5, c.x, y + 12);
+    }
+  });
+
+  // Header Labels
+  doc.setFontSize(5.5);
+  cols.forEach(c => {
+    const lines = c.label.split('\n');
+    const startY = c.x >= 249 ? y + 7.5 : y + (13 - lines.length * 2.8) / 2 + 2;
+    lines.forEach((line, lIdx) => {
+      doc.text(line, c.x + c.w / 2, startY + lIdx * 2.5, { align: 'center' });
+    });
+  });
+
+  y += 12;
+
+  // Table Data Rows
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(5.5);
+
+  const rowHeight = 7.5;
+  const maxRowsPerPage = Math.floor((pageHeight - y - 16) / rowHeight);
 
   rows.forEach((r, idx) => {
-    if (y > pageHeight - 20) {
+    if (y + rowHeight > pageHeight - 16) {
       doc.addPage();
-      y = 20;
+      y = 15;
     }
 
-    if (idx % 2 === 1) {
-      doc.setFillColor(248, 250, 252);
-      doc.rect(10, y - 4, pageWidth - 20, 7, 'F');
-    }
+    // Yellow cells matching screenshot Form WW-PPAP-102
+    doc.setFillColor(254, 252, 232); // Pale yellow
+    doc.rect(10, y, pageWidth - 20, rowHeight, 'FD');
 
-    doc.setTextColor(15, 23, 42);
-    doc.text(String(r.processStep).substring(0, 10), 12, y);
-    doc.text(String(r.processFunction).substring(0, 20), 26, y);
-    doc.text(String(r.failureMode).substring(0, 24), 60, y);
-    doc.text(String(r.failureEffect).substring(0, 24), 100, y);
-    doc.text(String(r.severity), 140, y);
-    doc.text(String(r.failureCause).substring(0, 24), 146, y);
-    doc.text(String(r.occurrence), 188, y);
-    doc.text(String(r.preventionControl).substring(0, 24), 194, y);
-    doc.text(String(r.detection), 234, y);
+    // Draw vertical column lines
+    cols.forEach(c => {
+      if (c.x > 10) {
+        doc.line(c.x, y, c.x, y + rowHeight);
+      }
+    });
 
-    // AP Badge
-    if (r.actionPriority === 'High') {
-      doc.setTextColor(185, 28, 28);
+    const s = r.severity || 1;
+    const o = r.occurrence || 1;
+    const d = r.detection || 1;
+    const rpn = r.rpn !== undefined ? r.rpn : (s * o * d);
+
+    const revS = r.revisedSeverity || s;
+    const revO = r.revisedOccurrence || (o > 1 ? o - 1 : 1);
+    const revD = r.revisedDetection || (d > 1 ? d - 1 : 1);
+    const revRpn = r.revisedRpn !== undefined ? r.revisedRpn : (revS * revO * revD);
+
+    const textY = y + 4.8;
+    doc.setTextColor(0, 0, 0);
+
+    // Line No
+    doc.text(String(r.lineNo || r.lineNumber || (idx + 1)), 10 + 5, textY, { align: 'center' });
+    // Process Stages
+    doc.text(String(r.processStage || r.processStep || '').substring(0, 14), 21, textY);
+    // Process Functions
+    doc.text(String(r.processFunction || '').substring(0, 20), 39, textY);
+    // Potential Failure Mode
+    doc.text(String(r.failureMode || '').substring(0, 18), 65, textY);
+    // Potential Effect
+    doc.text(String(r.failureEffect || '').substring(0, 20), 89, textY);
+    // Sev
+    doc.text(String(s), 114 + 3.5, textY, { align: 'center' });
+    // Class
+    doc.text(String(r.classification || '-'), 121 + 4.5, textY, { align: 'center' });
+    // Cause
+    doc.text(String(r.failureCause || '').substring(0, 20), 131, textY);
+    // Occur
+    doc.text(String(o), 156 + 4, textY, { align: 'center' });
+    // Current Controls
+    const ctrls = r.currentProcessControls || `${r.preventionControl || ''} / ${r.detectionControl || ''}`;
+    doc.text(String(ctrls).substring(0, 20), 165, textY);
+    // Detec
+    doc.text(String(d), 190 + 4, textY, { align: 'center' });
+    // RPN
+    if (rpn >= 100) {
       doc.setFont('helvetica', 'bold');
-      doc.text('HIGH', 240, y);
-    } else if (r.actionPriority === 'Medium') {
-      doc.setTextColor(217, 119, 6);
-      doc.setFont('helvetica', 'bold');
-      doc.text('MED', 240, y);
-    } else {
-      doc.setTextColor(22, 101, 52);
-      doc.setFont('helvetica', 'bold');
-      doc.text('LOW', 240, y);
+      doc.setTextColor(220, 38, 38);
     }
+    doc.text(String(rpn), 198 + 4.5, textY, { align: 'center' });
     doc.setFont('helvetica', 'normal');
-    doc.setTextColor(15, 23, 42);
+    doc.setTextColor(0, 0, 0);
 
-    doc.text(String(r.recommendedAction || '-').substring(0, 16), 252, y);
-    doc.text(String(r.status || 'Open'), 278, y);
+    // Recommended Action
+    doc.text(String(r.recommendedAction || '').substring(0, 18), 208, textY);
+    // Resp & Date
+    doc.text(String(r.responsibility || '').substring(0, 10), 232, textY);
 
-    y += 7;
+    // Action Results
+    doc.text(String(r.actionTaken || 'Implemented').substring(0, 12), 250, textY);
+    doc.text(String(revS), 265 + 2.5, textY, { align: 'center' });
+    doc.text(String(revO), 270 + 2.5, textY, { align: 'center' });
+    doc.text(String(revD), 275 + 2.5, textY, { align: 'center' });
+    doc.text(String(revRpn), 280 + 3.5, textY, { align: 'center' });
+
+    y += rowHeight;
   });
+
+  // 4. Form Footer
+  const footerY = pageHeight - 8;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(7);
+  doc.text('Form Number:       WW-PPAP-102', 10, footerY - 2.5);
+  doc.text('Form Revision Date: 22-Mar-2010', 10, footerY + 1.5);
 
   return doc;
 }

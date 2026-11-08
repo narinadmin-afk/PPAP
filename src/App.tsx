@@ -1,29 +1,77 @@
 import React, { useState, useEffect } from 'react';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { Navbar } from './components/layout/Navbar';
-import { Sidebar } from './components/layout/Sidebar';
+import { Sidebar, SidebarView } from './components/layout/Sidebar';
 import { Dashboard } from './components/dashboard/Dashboard';
 import { ProjectList } from './components/projects/ProjectList';
 import { ProjectDetail } from './components/projects/ProjectDetail';
+import { ExternalFileRepository } from './components/files/ExternalFileRepository';
 import { NewProjectModal } from './components/projects/NewProjectModal';
 import { AIDocumentGeneratorModal } from './components/ai/AIDocumentGeneratorModal';
 import { api } from './services/api';
 import { PPAPProject } from './types/ppap';
-import { History, ClipboardCheck, Layers } from 'lucide-react';
+import { History, ClipboardCheck, Layers, UploadCloud } from 'lucide-react';
+
+// Fallback seed projects for offline / standalone mode
+const FALLBACK_PROJECTS: PPAPProject[] = [
+  {
+    id: 'p-1',
+    projectNumber: 'PPAP-2026-001',
+    customerName: 'Toyota Motor Thailand Co., Ltd.',
+    supplierName: 'Apex Automotive Precision Parts Ltd.',
+    partName: 'Engine Mounting Support Bracket LH',
+    partNumber: '51201-0K150-C',
+    drawingNumber: 'DWG-51201-REV-04',
+    engineeringChangeLevel: 'ECL-04 (High Tensile Steel Upgrade)',
+    manufacturingLocation: 'Samut Prakan Plant 2, Line B',
+    submissionLevel: 3,
+    submissionReason: 'Engineering Change(s)',
+    submissionDate: '2026-11-20',
+    responsibleEngineer: 'Nattaporn Chaiyasin (Quality Engineer)',
+    status: 'Pending Review',
+    createdAt: '2026-10-06T16:17:26.987Z',
+    updatedAt: '2026-11-05T16:17:26.987Z',
+    totalElements: 18,
+    completedElements: 16,
+    elements: []
+  },
+  {
+    id: 'p-2',
+    projectNumber: 'PPAP-2026-002',
+    customerName: 'Honda Automobile (Thailand) Co., Ltd.',
+    supplierName: 'Apex Automotive Precision Parts Ltd.',
+    partName: 'Front Suspension Subframe Reinforcement Lower',
+    partNumber: '74111-T5A-000',
+    drawingNumber: 'HD-74111-T5A',
+    engineeringChangeLevel: 'Rev C',
+    manufacturingLocation: 'Ayutthaya Industrial Estate, Unit 4',
+    submissionLevel: 3,
+    submissionReason: 'Initial Submission',
+    submissionDate: '2026-12-05',
+    responsibleEngineer: 'Kittisak Wongsuwan (Production Engineer)',
+    status: 'In Progress',
+    createdAt: '2026-10-06T16:17:26.987Z',
+    updatedAt: '2026-11-05T16:17:26.987Z',
+    totalElements: 18,
+    completedElements: 7,
+    elements: []
+  }
+];
 
 function MainApp() {
   const { t } = useLanguage();
-  const [currentView, setCurrentView] = useState<'dashboard' | 'projects' | 'completeness' | 'audit' | 'upload'>('dashboard');
+  const [currentView, setCurrentView] = useState<SidebarView>('dashboard');
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [showNewProjectModal, setShowNewProjectModal] = useState(false);
   const [showAIGeneratorModal, setShowAIGeneratorModal] = useState(false);
 
-  const [projectsCount, setProjectsCount] = useState(0);
-  const [pendingCount, setPendingCount] = useState(0);
+  const [projects, setProjects] = useState<PPAPProject[]>(FALLBACK_PROJECTS);
+  const [projectsCount, setProjectsCount] = useState(2);
+  const [pendingCount, setPendingCount] = useState(1);
+  const [externalFilesCount, setExternalFilesCount] = useState(6);
   const [activeProject, setActiveProject] = useState<PPAPProject | null>(null);
   const [allAuditLogs, setAllAuditLogs] = useState<any[]>([]);
-  const [uploadedProjectId, setUploadedProjectId] = useState<string | null>(null);
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
     try {
@@ -44,26 +92,48 @@ function MainApp() {
   };
 
   useEffect(() => {
-    loadCounts();
+    loadData();
   }, [selectedProjectId, currentView]);
 
-  const loadCounts = () => {
+  const loadData = () => {
+    // 1. Fetch projects
     api.getProjects()
-      .then(projects => {
-        setProjectsCount(projects.length);
-        const pending = projects.filter(p => p.status === 'Pending Review').length;
-        setPendingCount(pending);
+      .then(projs => {
+        if (Array.isArray(projs) && projs.length > 0) {
+          setProjects(projs);
+          setProjectsCount(projs.length);
+          const pending = projs.filter(p => p.status === 'Pending Review').length;
+          setPendingCount(pending);
+        }
       })
-      .catch(err => console.warn('Could not load counts:', err));
+      .catch(() => {
+        // Fallback already pre-set
+      });
 
+    // 2. Fetch external files count
+    try {
+      const savedFiles = localStorage.getItem('ppap_external_files');
+      if (savedFiles) {
+        const parsed = JSON.parse(savedFiles);
+        if (Array.isArray(parsed)) setExternalFilesCount(parsed.length);
+      }
+    } catch {}
+
+    // 3. Fetch audit logs
     api.getAuditLogs()
-      .then(logs => setAllAuditLogs(logs))
-      .catch(err => console.warn('Could not load audit logs:', err));
+      .then(logs => {
+        if (Array.isArray(logs)) setAllAuditLogs(logs);
+      })
+      .catch(() => {});
 
+    // 4. Fetch active project if selected
     if (selectedProjectId) {
       api.getProjectById(selectedProjectId)
         .then(p => setActiveProject(p))
-        .catch(err => console.warn('Could not load active project:', err));
+        .catch(() => {
+          const fallback = projects.find(p => p.id === selectedProjectId) || null;
+          setActiveProject(fallback);
+        });
     } else {
       setActiveProject(null);
     }
@@ -75,7 +145,7 @@ function MainApp() {
 
   const handleProjectCreated = (newId: string) => {
     setSelectedProjectId(newId);
-    loadCounts();
+    loadData();
   };
 
   return (
@@ -93,7 +163,7 @@ function MainApp() {
       />
 
       <div className="flex-1 flex w-full min-h-0">
-        {/* Sidebar */}
+        {/* Left Sidebar Menu */}
         <Sidebar
           currentView={currentView}
           onNavigate={(view) => {
@@ -103,6 +173,7 @@ function MainApp() {
           onOpenAIGenerator={() => setShowAIGeneratorModal(true)}
           projectsCount={projectsCount}
           pendingCount={pendingCount}
+          externalFilesCount={externalFilesCount}
           isCollapsed={isSidebarCollapsed}
           onToggleCollapse={handleToggleSidebar}
         />
@@ -114,9 +185,15 @@ function MainApp() {
               projectId={selectedProjectId}
               onBack={() => {
                 setSelectedProjectId(null);
-                loadCounts();
+                loadData();
               }}
               onOpenAIGenerator={() => setShowAIGeneratorModal(true)}
+            />
+          ) : currentView === 'files' ? (
+            <ExternalFileRepository
+              projects={projects}
+              selectedProjectId={null}
+              onSelectProject={handleSelectProject}
             />
           ) : currentView === 'dashboard' ? (
             <Dashboard
@@ -128,7 +205,8 @@ function MainApp() {
             <ProjectList
               onSelectProject={handleSelectProject}
               onOpenNewProject={() => setShowNewProjectModal(true)}
-            />): currentView === 'completeness' ? (
+            />
+          ) : currentView === 'completeness' ? (
             <div className="space-y-6">
               <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm">
                 <div className="flex items-center space-x-2">
@@ -147,36 +225,6 @@ function MainApp() {
                 onOpenNewProject={() => setShowNewProjectModal(true)}
               />
             </div>
-          ) : currentView === 'upload' ? (
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm">
-              <h1 className="text-xl font-bold text-white tracking-tight">Upload PPAP Project</h1>
-              <p className="text-slate-400 text-xs mt-1">Select a PPAP project file to import from outside.</p>
-              <input
-                type="file"
-                accept=".json,.zip"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (e: any) => {
-                      const projectData = JSON.parse(e.target.result);
-                      const newProjectId = crypto.randomUUID();
-                      const projectWithId = { ...projectData, id: newProjectId };
-                      api.createProject(projectWithId)
-                        .then(() => {
-                          setUploadedProjectId(newProjectId);
-                          setSelectedProjectId(newProjectId);
-                          setCurrentView('projects');
-                          loadCounts();
-                        })
-                        .catch(err => alert('Failed to import project: ' + err.message));
-                    };
-                    reader.readAsText(file);
-                  }
-                }}
-                className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-slate-100 hover:border-blue-500 focus:outline-none focus:border-blue-500 transition"
-              />
-            </div>
           ) : (
             <div className="space-y-6">
               <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm">
@@ -187,7 +235,7 @@ function MainApp() {
                   </h1>
                 </div>
                 <p className="text-xs text-slate-400 mt-1">
-                  Immutable quality logs tracking all document revisions, approvals, rejections, and test result updates.
+                  Immutable quality logs tracking all document revisions, approvals, rejections, external file uploads, and test result updates.
                 </p>
               </div>
 
@@ -217,7 +265,7 @@ function MainApp() {
                 </div>
               </div>
             </div>
-          )
+          )}
         </main>
       </div>
 
@@ -233,14 +281,14 @@ function MainApp() {
         onClose={() => setShowAIGeneratorModal(false)}
         activeProject={activeProject}
         onApplyResult={() => {
-          loadCounts();
+          loadData();
         }}
       />
     </div>
   );
 }
 
-export default function App() {
+export function App() {
   return (
     <AuthProvider>
       <LanguageProvider>
@@ -249,3 +297,5 @@ export default function App() {
     </AuthProvider>
   );
 }
+
+export default App;
